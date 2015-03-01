@@ -214,7 +214,7 @@ class Client extends Object with event.Emitter {
           }
           var to = this.timeout;
           if (to == null || to < 1) {
-            rto * roundTrips;
+            to = rto * roundTrips;
             if (to == 0) to = 5000;
           }
           _transportTref = new Timer(new Duration(milliseconds:to), () {
