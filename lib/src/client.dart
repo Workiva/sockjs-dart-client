@@ -30,6 +30,8 @@ class Client extends Object with event.Emitter {
   num rtt;
   num rto;
   List<String> protocolsWhitelist = [];
+  num roundTrips;
+  num timeout;
 
   var _ir;
 
@@ -38,7 +40,7 @@ class Client extends Object with event.Emitter {
 
   Client(String url, {
     this.devel: false, this.debug: false, this.protocolsWhitelist,
-    this.info, this.rtt: 0, this.server}) {
+    this.info, this.rtt: 0, this.server, this.roundTrips, this.timeout}) {
 
     _baseUrl = utils.amendUrl(url);
 
@@ -205,8 +207,16 @@ class Client extends Object with event.Emitter {
           _debug('Skipping transport: $protocol');
       } else {
           var roundTrips = PROTOCOLS[protocol].roundTrips;
-          var to = rto * roundTrips;
-          if (to == 0) to = 5000;
+          if (this.roundTrips != null && this.roundTrips > 0) {
+            // if roundTrips is passed in, we will use it instead
+            // of the defaulted value for the protocol.
+            roundTrips = this.roundTrips;
+          }
+          var to = this.timeout;
+          if (to == null || to < 1) {
+            rto * roundTrips;
+            if (to == 0) to = 5000;
+          }
           _transportTref = new Timer(new Duration(milliseconds:to), () {
               if (readyState == CONNECTING) {
                   // I can't understand how it is possible to run
