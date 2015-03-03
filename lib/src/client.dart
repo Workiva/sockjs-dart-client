@@ -211,12 +211,12 @@ class Client extends Object with event.Emitter {
             !PROTOCOLS[protocol].enabled) {
           _debug('Skipping transport: $protocol');
       } else {
-          var roundTrips = PROTOCOLS[protocol].roundTrips;
-          if (this.roundTrips != null && this.roundTrips > 0) {
-            // if roundTrips is passed in, we will use it instead
-            // of the defaulted value for the protocol.
-            roundTrips = this.roundTrips;
-          }
+          // if roundTrips is passed in, we will use it
+          // instead of the defaulted value for the protocol.
+          var roundTrips = (this.roundTrips != null && this.roundTrips > 0)
+                           ? this.roundTrips
+                           : PROTOCOLS[protocol].roundTrips;
+          
           var to = this.timeout;
           if (to == null || to < 1) {
             to = rto * roundTrips;
