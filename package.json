@@ -1,0 +1,17 @@
+{
+  "name": "sockjs-dart-client",
+  "version": "0.2.0",
+  "description": "A SockJS client in Dart",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Workiva/sockjs-dart-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Workiva/sockjs-dart-client/issues"
+  },
+  "homepage": "https://github.com/Workiva/sockjs-dart-client",
+  "devDependencies": {
+    "http": "0.0.0",
+    "sockjs": "^0.3.15"
+  }
+}

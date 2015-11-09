@@ -8,5 +8,10 @@ authors:
 dependencies:
   browser: '>=0.9.0 <1.0.0'
   logging: '>=0.9.0 <1.0.0'
+dev_dependencies:
+  coverage: '>=0.7.2'
+  dart_dev: '>=1.0.2'
+  dart_style: '>=0.2.0'
+  test: '>=0.12.5'
 environment:
   sdk: '>=1.0.0 <2.0.0'

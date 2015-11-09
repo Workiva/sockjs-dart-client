@@ -4,7 +4,7 @@ class WebSocketTransport {
   Client ri;
   String url;
 
-  WebSocket ws;
+  html.WebSocket ws;
   StreamSubscription messageSubscription;
   StreamSubscription closeSubscription;
 
@@ -20,7 +20,7 @@ class WebSocketTransport {
 
     this.url = url;
 
-    ws = new WebSocket(url);
+    ws = new html.WebSocket(url);
 
 
     messageSubscription = ws.onMessage.listen(_msgHandler);
@@ -37,7 +37,17 @@ class WebSocketTransport {
 
   _msgHandler(m) => ri._didMessage(m.data);
 
-  _closeHandler(m) => ri._didMessage(utils.closeFrame(1006, "WebSocket connection broken"));
+  _closeHandler(html.CloseEvent c) {
+    var code = c.code != null ? c.code : 1006;
+    var reason = c.reason != null ? c.reason : 'WebSocket connection broken';
+    ri._didMessage(utils.closeFrame(code, reason));
+  }
+
+  doClose([int code, String reason]) {
+    if (ws != null) {
+      ws.close(code, reason);
+    }
+  }
 
   doSend(data) => ws.send('[$data]');
 

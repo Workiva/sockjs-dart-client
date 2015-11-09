@@ -10,7 +10,7 @@ typedef AbstractXHRObject AjaxObjectFactory(String method, String baseUrl, [payl
 
 class AbstractXHRObject extends Object with event.Emitter {
 
-  HttpRequest xhr;
+  html.HttpRequest xhr;
   StreamSubscription changeSubscription;
 
   Stream get onChunk => this["chunk"];
@@ -20,7 +20,7 @@ class AbstractXHRObject extends Object with event.Emitter {
   _start(method, url, payload, {noCredentials: false, headers}) {
 
     try {
-        xhr = new HttpRequest();
+        xhr = new html.HttpRequest();
     } catch(x) {};
 
     if ( xhr == null ) {
@@ -61,7 +61,7 @@ class AbstractXHRObject extends Object with event.Emitter {
     xhr.send(payload);
   }
 
-  _readyStateHandler(Event evt) {
+  _readyStateHandler(html.Event evt) {
     switch (xhr.readyState) {
       case 3:
         var text, status;
