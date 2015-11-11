@@ -66,18 +66,18 @@ class BufferedSender {
 // postMessage communication */
 class JsonPGenericSender {
 
-  FormElement _sendForm = null;
-  TextAreaElement _sendArea = null;
+  html.FormElement _sendForm = null;
+  html.TextAreaElement _sendArea = null;
 
   var completed;
 
   JsonPGenericSender(url, payload, callback) {
-    FormElement form;
-    TextAreaElement area;
+    html.FormElement form;
+    html.TextAreaElement area;
 
     if (_sendForm == null) {
-      form = _sendForm = new Element.tag('form');
-      area = _sendArea = new Element.tag('textarea');
+      form = _sendForm = new html.Element.tag('form');
+      area = _sendArea = new html.Element.tag('textarea');
       area.name = 'd';
       form.style.display = 'none';
       form.style.position = 'absolute';
@@ -93,12 +93,12 @@ class JsonPGenericSender {
     form.target = id;
     form.action = '$url/jsonp_send?i=$id';
 
-    IFrameElement iframe;
+    html.IFrameElement iframe;
     try {
         // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
-        iframe = new Element.html('<iframe name="$id">');
+        iframe = new html.Element.html('<iframe name="$id">');
     } catch(x) {
-        iframe = new Element.tag('iframe');
+        iframe = new html.Element.tag('iframe');
         iframe.name = id;
     }
     iframe.id = id;

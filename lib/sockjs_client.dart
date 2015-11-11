@@ -1,6 +1,6 @@
 library sockjs_client;
 
-import "dart:html";
+import "dart:html" as html;
 import "dart:convert";
 import "dart:async";
 import "dart:js";

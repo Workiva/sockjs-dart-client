@@ -12,7 +12,7 @@ class Info {
     origins = json["origins"];
     cookieNeeded = json["cookie_needed"];
     entropy = json["entropy"];
-    nullOrigin = (document.domain == null);
+    nullOrigin = (html.document.domain == null);
   }
 }
 
@@ -84,8 +84,8 @@ class AjaxInfoReceiver extends InfoReceiver {
 class InfoReceiverIframe extends InfoReceiver {
 
   InfoReceiverIframe(base_url) : super._() {
-    if(document.body == null) {
-      document.onLoad.listen((_) => go());
+    if(html.document.body == null) {
+      html.document.onLoad.listen((_) => go());
     } else {
         go();
     }

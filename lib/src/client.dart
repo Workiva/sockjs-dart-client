@@ -70,6 +70,22 @@ class Client extends Object with event.Emitter {
   Stream get onClose => this["close"];
   Stream get onHeartbeat => this["heartbeat"];
 
+  void close([int code, String reason]) {
+    if (_transport != null) {
+      if (_transport is WebSocketTransport) {
+        _transport.doClose(code, reason);
+      } else if (_transport is XhrStreamingTransport) {
+        if (code == null) {
+          code = 0;
+        }
+        if (reason == null) {
+          reason = '';
+        }
+        _didClose(code, reason);
+      }
+    }
+  }
+
   send(data) {
     if (readyState == CONNECTING) {
         throw 'INVALID_STATE_ERR';
@@ -199,11 +215,11 @@ class Client extends Object with event.Emitter {
       // the `head`?
       if (PROTOCOLS.containsKey(protocol) &&
           PROTOCOLS[protocol].needBody &&
-          ( (document.body == null) || (document.readyState != null && document.readyState != 'complete'))
+          ( (html.document.body == null) || (html.document.readyState != null && html.document.readyState != 'complete'))
           ) {
           _protocols.insert(0, protocol);
           this.protocol = 'waiting-for-load';
-          document.onLoad.listen( (_) => _tryNextProtocol());
+          html.document.onLoad.listen( (_) => _tryNextProtocol());
           return true;
       }
 
