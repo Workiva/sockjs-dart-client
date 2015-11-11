@@ -1,11 +1,8 @@
 var http = require('http');
 var sockjs = require('sockjs');
 
-var sockjsUrl = '//cdn.jsdelivr.net/sockjs/1.0.3/sockjs.min.js';
 
-var echo = sockjs.createServer({
-    sockjs_url: sockjsUrl
-});
+var echo = sockjs.createServer();
 echo.on('connection', function(conn) {
     conn.on('data', function(message) {
         console.log('[echo] "' + message + '"');
@@ -16,9 +13,7 @@ echo.on('connection', function(conn) {
     });
 });
 
-var closeOnRequest = sockjs.createServer({
-    sockjs_url: sockjsUrl
-});
+var closeOnRequest = sockjs.createServer();
 closeOnRequest.on('connection', function(conn) {
     conn.on('data', function(message) {
         if (message.substr(0, 'close'.length) === 'close') {

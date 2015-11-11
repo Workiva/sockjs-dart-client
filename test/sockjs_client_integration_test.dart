@@ -13,25 +13,25 @@ const String fofUri = 'http://localhost:8600/404';
 void main() {
   group('SockJS Client', () {
     group('default', () {
-      Client createEchoClient() => new Client(echoUri);
-      Client createCorClient() => new Client(corUri);
-      Client create404Client() => new Client(fofUri);
+      Client createEchoClient() => new Client(echoUri, noCredentials: true);
+      Client createCorClient() => new Client(corUri, noCredentials: true);
+      Client create404Client() => new Client(fofUri, noCredentials: true);
 
       integrationSuite(createEchoClient, createCorClient, create404Client);
     });
 
     group('web-socket', () {
-      Client createEchoClient() => new Client(echoUri, protocolsWhitelist: ['websocket']);
-      Client createCorClient() => new Client(corUri, protocolsWhitelist: ['websocket']);
-      Client create404Client() => new Client(fofUri, protocolsWhitelist: ['websocket']);
+      Client createEchoClient() => new Client(echoUri, noCredentials: true, protocolsWhitelist: ['websocket']);
+      Client createCorClient() => new Client(corUri, noCredentials: true, protocolsWhitelist: ['websocket']);
+      Client create404Client() => new Client(fofUri, noCredentials: true, protocolsWhitelist: ['websocket']);
 
       integrationSuite(createEchoClient, createCorClient, create404Client);
     });
 
     group('xhr-streaming', () {
-      Client createEchoClient() => new Client(echoUri, protocolsWhitelist: ['xhr-streaming']);
-      Client createCorClient() => new Client(corUri, protocolsWhitelist: ['xhr-streaming']);
-      Client create404Client() => new Client(fofUri, protocolsWhitelist: ['xhr-streaming']);
+      Client createEchoClient() => new Client(echoUri, noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
+      Client createCorClient() => new Client(corUri, noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
+      Client create404Client() => new Client(fofUri, noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
 
       integrationSuite(createEchoClient, createCorClient, create404Client);
     });
