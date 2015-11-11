@@ -1,6 +1,8 @@
 .project
 
-.packages
-.pub
+/.packages
+/.pub
 packages
-pubspec.lock
+/pubspec.lock
+
+/coverage

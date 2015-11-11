@@ -8,13 +8,14 @@ class Polling {
   AjaxObjectFactory xhrFactory;
   XhrReceiver poll;
   bool pollIsClosing = false;
+  bool noCredentials;
 
-  Polling(this.ri, this.receiverFactory, this.recvUrl, this.xhrFactory) {
+  Polling(this.ri, this.receiverFactory, this.recvUrl, this.xhrFactory, {bool this.noCredentials}) {
     _scheduleRecv();
   }
 
   _scheduleRecv() {
-    poll =  receiverFactory(recvUrl, xhrFactory);
+    poll =  receiverFactory(recvUrl, xhrFactory, noCredentials: noCredentials);
     var msg_counter = 0;
     var msgHandler = (e) {
       msg_counter += 1;

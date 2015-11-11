@@ -6,7 +6,7 @@ class StatusEvent extends event.Event {
   StatusEvent(String type, [this.status = 0, this.text = ""]) : super(type);
 }
 
-typedef AbstractXHRObject AjaxObjectFactory(String method, String baseUrl, [payload]);
+typedef AbstractXHRObject AjaxObjectFactory(String method, String baseUrl, {bool noCredentials, payload});
 
 class AbstractXHRObject extends Object with event.Emitter {
 
@@ -17,7 +17,7 @@ class AbstractXHRObject extends Object with event.Emitter {
   Stream get onFinish => this["finish"];
   Stream get onTimeout => this["timeout"];
 
-  _start(method, url, payload, {noCredentials: false, headers}) {
+  _start(method, url, payload, {bool noCredentials: false, headers}) {
 
     try {
         xhr = new html.HttpRequest();
@@ -106,22 +106,22 @@ class AbstractXHRObject extends Object with event.Emitter {
 }
 
 class XHRCorsObject extends AbstractXHRObject {
-   XHRCorsObject(method, url, payload, {noCredentials, headers} )  {
-    Timer.run(() =>_start(method, url, payload, noCredentials: false));
+   XHRCorsObject(method, url, {headers, noCredentials, payload})  {
+    Timer.run(() =>_start(method, url, payload, noCredentials: noCredentials != null ? noCredentials : false));
    }
 }
 
 
 
 class XHRLocalObject extends AbstractXHRObject {
-  XHRLocalObject (method, url, payload, {noCredentials, headers}) {
-    Timer.run(() =>_start(method, url, payload, noCredentials: true));
+  XHRLocalObject(method, url, {headers, noCredentials, payload}) {
+    Timer.run(() =>_start(method, url, payload, noCredentials: noCredentials != null ? noCredentials : true));
     }
 }
 
-XHRLocalObjectFactory(method, baseUrl, [payload]) => new XHRLocalObject(method, baseUrl, payload);
+XHRLocalObjectFactory(method, baseUrl, {bool noCredentials, payload}) => new XHRLocalObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
 
-XHRCorsObjectFactory(method, baseUrl, [payload]) => new XHRCorsObject(method, baseUrl, payload);
+XHRCorsObjectFactory(method, baseUrl, {bool noCredentials, payload}) => new XHRCorsObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
 
 // 1. Is natively via XHR
 // 2. Is natively via XDR
