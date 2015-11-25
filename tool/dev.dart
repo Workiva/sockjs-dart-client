@@ -20,7 +20,7 @@ main(List<String> args) async {
     ..after = [_stopServer]
     ..unitTests = []
     ..integrationTests = ['test/sockjs_client_integration_test.dart']
-    ..platforms = ['content-shell', 'dartium'];
+    ..platforms = ['content-shell'];
 
   await dev(args);
 }
