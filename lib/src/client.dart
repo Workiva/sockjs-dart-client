@@ -131,7 +131,6 @@ class Client extends Object with event.Emitter {
                                       lastEvent: close_event );
     }
     readyState = CLOSED;
-    print("READY STATE set to closed, dispatching close event");
     Timer.run(() => dispatch(close_event));
   }
 
@@ -152,7 +151,6 @@ class Client extends Object with event.Emitter {
 
   _dispatchMessage(data) {
     if (readyState != OPEN) {
-        print("not dispatching event with data ${data.text.length}");
             return;
     }
    dispatch(new MessageEvent(data));

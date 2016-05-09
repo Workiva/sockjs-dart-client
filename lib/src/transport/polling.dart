@@ -16,10 +16,8 @@ class Polling {
 
   _scheduleRecv() {
     poll =  receiverFactory(recvUrl, xhrFactory, noCredentials: noCredentials);
-    print("_scheduleRecv started");
     var msg_counter = 0;
     var msgHandler = (e) {
-      print("msgHandler ${e.data.length}");
       msg_counter += 1;
       ri._didMessage(e.data);
     };
@@ -29,7 +27,6 @@ class Polling {
         messageSubscription.cancel();
         closeSubscription.cancel();
         poll = null;
-        print("close handler called with event ${e.reason} pollIsClosing is $pollIsClosing");
         if (!pollIsClosing) {
             if (e.reason == 'permanent') {
                 ri._didClose(1006, 'Polling error (${e.reason})');

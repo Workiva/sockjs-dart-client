@@ -9,11 +9,9 @@ part of sockjs_client;
     xo = xhrFactory('POST', url, noCredentials: noCredentials);
     xo.onChunk.listen((e){
         if (e.status != 200) return;
-        print("Receivng chunk with text of length ${e.text.length}");
         readAndBroadcastMessage(e);
     });
     xo.onFinish.listen((e) {
-        print("Sending chunk with text of length ${e.text.length}");
         readAndBroadcastMessage(e);
         xo = null;
         var reason = (e.status == 200) ? 'network' : 'permanent';
