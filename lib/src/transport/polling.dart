@@ -15,7 +15,7 @@ class Polling {
   }
 
   _scheduleRecv() {
-    poll =  receiverFactory(recvUrl, xhrFactory, noCredentials: noCredentials);
+    poll = receiverFactory(recvUrl, xhrFactory, noCredentials: noCredentials);
     var msg_counter = 0;
     var msgHandler = (e) {
       msg_counter += 1;
