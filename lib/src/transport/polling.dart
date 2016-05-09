@@ -16,9 +16,10 @@ class Polling {
 
   _scheduleRecv() {
     poll =  receiverFactory(recvUrl, xhrFactory, noCredentials: noCredentials);
+    print("_scheduleRecv started");
     var msg_counter = 0;
     var msgHandler = (e) {
-      print("msgHandler ${e}");
+      print("msgHandler ${e.data.length}");
       msg_counter += 1;
       ri._didMessage(e.data);
     };
