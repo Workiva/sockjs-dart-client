@@ -122,7 +122,6 @@ class Client extends Object with event.Emitter {
 
     if (!utils.userSetCode(code) &&
         readyState == CONNECTING && !force) {
-            print("YEZIR");
         if (_tryNextProtocol(close_event)) {
             return;
         }
