@@ -27,6 +27,7 @@ class Polling {
         messageSubscription.cancel();
         closeSubscription.cancel();
         poll = null;
+        print("close handler called with event ${e.reason} pollIsClosing is $pollIsClosing");
         if (!pollIsClosing) {
             if (e.reason == 'permanent') {
                 ri._didClose(1006, 'Polling error (${e.reason})');

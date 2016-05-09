@@ -122,6 +122,7 @@ class Client extends Object with event.Emitter {
 
     if (!utils.userSetCode(code) &&
         readyState == CONNECTING && !force) {
+            print("YEZIR");
         if (_tryNextProtocol(close_event)) {
             return;
         }
@@ -131,7 +132,7 @@ class Client extends Object with event.Emitter {
                                       lastEvent: close_event );
     }
     readyState = CLOSED;
-
+    print("READY STATE set to closed, dispatching close event");
     Timer.run(() => dispatch(close_event));
   }
 
@@ -152,6 +153,7 @@ class Client extends Object with event.Emitter {
 
   _dispatchMessage(data) {
     if (readyState != OPEN) {
+        print("not dispatching event with data ${data.text.length}");
             return;
     }
    dispatch(new MessageEvent(data));
@@ -235,7 +237,7 @@ class Client extends Object with event.Emitter {
           var roundTrips = (this.roundTrips != null && this.roundTrips > 0)
                            ? this.roundTrips
                            : PROTOCOLS[protocol].roundTrips;
-          
+
           var to = this.timeout;
           if (to == null || to < 1) {
             to = rto * roundTrips;
