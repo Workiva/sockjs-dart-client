@@ -77,6 +77,7 @@ class AbstractXHRObject extends Object with event.Emitter {
         }
         break;
       case 4:
+        print("Ready state changed to DONE");
         dispatch(new StatusEvent("finish", xhr.status, xhr.responseText));
         _cleanup(false);
         break;

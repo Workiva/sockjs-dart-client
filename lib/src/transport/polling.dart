@@ -18,6 +18,7 @@ class Polling {
     poll =  receiverFactory(recvUrl, xhrFactory, noCredentials: noCredentials);
     var msg_counter = 0;
     var msgHandler = (e) {
+      print("msgHandler ${e.text.length}");
       msg_counter += 1;
       ri._didMessage(e.data);
     };
