@@ -10,7 +10,7 @@ part of sockjs_client;
     xo = xhrFactory('POST', url, noCredentials: noCredentials);
     xo.onChunk.listen((e){
         if (e.status != 200) return;
-        print("Sending chunk with text of length ${e.text}");
+        print("Sending chunk with text of length ${e.text.length}");
         while (true) {
             var buf = e.text.substring(buf_pos);
             var p = buf.indexOf('\n');
@@ -21,7 +21,7 @@ part of sockjs_client;
         }
     });
     xo.onFinish.listen((e) {
-        print("Sending chunk with text of length ${e.text}");
+        print("Sending chunk with text of length ${e.text.length}");
         dispatch(new StatusEvent("chunk", e.status, e.text));
         xo = null;
         var reason = (e.status == 200) ? 'network' : 'permanent';
