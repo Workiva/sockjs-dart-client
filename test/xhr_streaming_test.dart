@@ -10,27 +10,27 @@ import 'package:test/test.dart';
 void main() {
   group('Xhr Receiver', () {
     test('broadcasts message on chunk', () async {
-      XhrReceiver xhrReceiver = XhrReceiverFactory("foo", MockMockXHRCorsObjectFactory);
+      XhrReceiver xhrReceiver = XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
 
       Completer msgCompleter = new Completer();
       xhrReceiver.onMessage.listen((e) {
-        if (e.data == "some text") {
+        if (e.data == 'some text') {
           msgCompleter.complete();
         }
       });
 
-      xhrReceiver.xo.dispatch(new StatusEvent("chunk", 200, "some text\n"));
+      xhrReceiver.xo.dispatch(new StatusEvent('chunk', 200, 'some text\n'));
       await msgCompleter.future;
     });
 
     test('broadcasts message and close on finish', () async {
-      XhrReceiver xhrReceiver = XhrReceiverFactory("foo", MockMockXHRCorsObjectFactory);
+      XhrReceiver xhrReceiver = XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
 
       Completer msgCompleter = new Completer();
       Completer closeCompleter = new Completer();
 
       xhrReceiver.onMessage.listen((e) {
-        if (e.data == "some text") {
+        if (e.data == 'some text') {
           msgCompleter.complete();
         }
       });
@@ -38,7 +38,7 @@ void main() {
         closeCompleter.complete();
       });
 
-      xhrReceiver.xo.dispatch(new StatusEvent("finish", 200, "some text\n"));
+      xhrReceiver.xo.dispatch(new StatusEvent('finish', 200, 'some text\n'));
       await msgCompleter.future;
       await closeCompleter.future;
     });
@@ -46,7 +46,7 @@ void main() {
 }
 
 
-MockMockXHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) => new MockXHRCorsObject();
+MockXHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) => new MockXHRCorsObject();
 class MockXHRCorsObject extends AbstractXHRObject {
   MockXHRCorsObject();
 }
