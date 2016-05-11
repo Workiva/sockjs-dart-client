@@ -18,7 +18,7 @@ main(List<String> args) async {
   config.test
     ..before = [_startServer]
     ..after = [_stopServer]
-    ..unitTests = []
+    ..unitTests = ['test/xhr_streaming_test.dart']
     ..integrationTests = ['test/sockjs_client_integration_test.dart']
     ..platforms = ['content-shell'];
 
