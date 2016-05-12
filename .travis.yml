@@ -7,4 +7,5 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 script:
   - npm install
+  - pub run dart_dev test --unit
   - pub run dart_dev test --integration

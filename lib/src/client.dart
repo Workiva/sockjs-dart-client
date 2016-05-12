@@ -235,7 +235,6 @@ class Client extends Object with event.Emitter {
           var roundTrips = (this.roundTrips != null && this.roundTrips > 0)
                            ? this.roundTrips
                            : PROTOCOLS[protocol].roundTrips;
-          
           var to = this.timeout;
           if (to == null || to < 1) {
             to = rto * roundTrips;
