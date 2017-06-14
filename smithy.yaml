@@ -2,7 +2,7 @@ project: dart
 language: dart
 
 # dart 1.23.0
-drydock-prod.workiva.net/workiva/smithy-runner-generator:153818
+runner-image: drydock-prod.workiva.net/workiva/smithy-runner-generator:153818
 
 script:
   - npm install
