@@ -112,7 +112,7 @@ class JsonPGenericSender {
     }
     form.submit();
 
-    var readyStateChangeHandler = (e) {
+    var readyStateChangeHandler = (html.Event e) {
       if (new JsObject.fromBrowserObject(iframe)["readyState"] == 'complete') completed(null);
     };
 

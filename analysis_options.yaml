@@ -3,8 +3,5 @@ analyzer:
 
 linter:
   rules:
-    Error: Cancel instances of dart.async.StreamSubscription.
     - cancel_subscriptions
-
-    # Error: Close instances of dart.core.Sink.
     - close_sinks

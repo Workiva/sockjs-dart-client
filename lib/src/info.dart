@@ -133,9 +133,11 @@ class InfoReceiverFake extends InfoReceiver {
 class WInfoReceiverIframe {
   WInfoReceiverIframe(ri, _trans_url, baseUrl) {
     var ir = new AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
-    ir.onFinish.listen( (evt) {
+    ir.onFinish.listen( (event.Event evt) {
+      if (evt is InfoReceiverEvent) {
         ri._didMessage('m${JSON.encode([evt.info, evt.rtt])}');
-        ri._didClose();
+      }
+      ri._didClose();
     });
   }
   doCleanup() {}
