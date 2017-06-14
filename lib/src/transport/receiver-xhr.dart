@@ -39,4 +39,6 @@ part of sockjs_client;
   }
 }
 
-XhrReceiverFactory(String recvUrl, AjaxObjectFactory xhrFactory, {bool noCredentials}) => new XhrReceiver(recvUrl, xhrFactory, noCredentials: noCredentials);
+Receiver XhrReceiverFactory(String recvUrl, AjaxObjectFactory xhrFactory, {bool noCredentials}) {
+  return new XhrReceiver(recvUrl, xhrFactory, noCredentials: noCredentials);
+}
