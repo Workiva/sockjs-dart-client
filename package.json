@@ -1,6 +1,6 @@
 {
   "name": "sockjs-dart-client",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A SockJS client in Dart",
   "repository": {
     "type": "git",
