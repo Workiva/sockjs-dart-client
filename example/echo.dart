@@ -2,7 +2,7 @@ library echo;
 
 import "dart:html";
 import 'package:logging/logging.dart';
-import "package:sockjs_client/sockjs.dart" as SockJS;
+import "package:sockjs_client/sockjs_client.dart" as SockJS;
 
 DivElement div  = querySelector('#first div');
 InputElement inp  = querySelector('#first input');

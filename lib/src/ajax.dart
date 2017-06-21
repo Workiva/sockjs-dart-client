@@ -119,9 +119,13 @@ class XHRLocalObject extends AbstractXHRObject {
     }
 }
 
-XHRLocalObjectFactory(method, baseUrl, {bool noCredentials, payload}) => new XHRLocalObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
+AbstractXHRObject XHRLocalObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) {
+  return new XHRLocalObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
+}
 
-XHRCorsObjectFactory(method, baseUrl, {bool noCredentials, payload}) => new XHRCorsObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
+AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) {
+  return new XHRCorsObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
+}
 
 // 1. Is natively via XHR
 // 2. Is natively via XDR

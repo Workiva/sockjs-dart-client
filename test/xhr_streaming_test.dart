@@ -46,7 +46,10 @@ void main() {
 }
 
 
-MockXHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) => new MockXHRCorsObject();
+AbstractXHRObject MockXHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) {
+  return new MockXHRCorsObject();
+}
+
 class MockXHRCorsObject extends AbstractXHRObject {
   MockXHRCorsObject();
 }

@@ -4,5 +4,5 @@
 /.pub
 packages
 /pubspec.lock
-
+node_modules
 /coverage

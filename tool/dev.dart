@@ -1,15 +1,15 @@
 library tool.dev;
 
 import 'dart:async';
-import 'dart:io';
-
 import 'package:dart_dev/dart_dev.dart' show dev, config;
 import 'package:dart_dev/util.dart' show TaskProcess, reporter;
 
 main(List<String> args) async {
   // https://github.com/Workiva/dart_dev
 
-  config.analyze.entryPoints = ['example/', 'lib/', 'tool/'];
+  config.analyze
+    ..entryPoints = ['example/', 'lib/', 'tool/']
+    ..strong = true;
   config.format.directories = ['example/', 'lib/', 'tool/'];
 
   config.coverage
