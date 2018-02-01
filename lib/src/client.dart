@@ -33,6 +33,8 @@ class Client extends Object with event.Emitter {
   num roundTrips;
   num timeout;
 
+  bool noCredentials;
+
   var _ir;
 
   var _transport = null;
@@ -42,6 +44,7 @@ class Client extends Object with event.Emitter {
                       this.debug: false,
                       this.protocolsWhitelist,
                       this.info,
+                      this.noCredentials: false,
                       this.rtt: 0,
                       this.server,
                       this.roundTrips,
@@ -250,7 +253,7 @@ class Client extends Object with event.Emitter {
           var connid = utils.random_string(8);
           var trans_url = "$_baseUrl/$server/$connid";
           _debug('Opening transport: $protocol url:$trans_url RTO:$rto roundTrips:$roundTrips timeout:$to');
-          _transport = PROTOCOLS[protocol].create(this, trans_url, _baseUrl);
+          _transport = PROTOCOLS[protocol].create(this, trans_url, baseUrl: _baseUrl, noCredentials: noCredentials);
           return true;
       }
     }

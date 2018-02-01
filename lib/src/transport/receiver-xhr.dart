@@ -4,10 +4,10 @@ part of sockjs_client;
 
    AbstractXHRObject xo = null;
 
-   XhrReceiver(url, AjaxObjectFactory xhrFactory) {
+   XhrReceiver(url, AjaxObjectFactory xhrFactory, {bool noCredentials}) {
     var buf_pos = 0;
 
-    xo = xhrFactory('POST', url);
+    xo = xhrFactory('POST', url, noCredentials: noCredentials);
     xo.onChunk.listen((e){
         if (e.status != 200) return;
         while (true) {
@@ -36,4 +36,4 @@ part of sockjs_client;
   }
 }
 
-XhrReceiverFactory(String recvUrl, AjaxObjectFactory xhrFactory) => new XhrReceiver(recvUrl, xhrFactory);
+XhrReceiverFactory(String recvUrl, AjaxObjectFactory xhrFactory, {bool noCredentials}) => new XhrReceiver(recvUrl, xhrFactory, noCredentials: noCredentials);

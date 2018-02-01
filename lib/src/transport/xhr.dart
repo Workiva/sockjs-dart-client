@@ -6,11 +6,11 @@ class AjaxBasedTransport extends BufferedSender {
 
   Polling poll = null;
 
-  AjaxBasedTransport(Client ri, transUrl, urlSuffix, ReceiverFactory receiverFactory, AjaxObjectFactory xhrFactory) {
+  AjaxBasedTransport(Client ri, transUrl, urlSuffix, ReceiverFactory receiverFactory, AjaxObjectFactory xhrFactory, {bool noCredentials}) {
     this.ri = ri;
     this.transUrl = transUrl;
-    sendConstructor(createAjaxSender(xhrFactory));
-    this.poll = new Polling(ri, receiverFactory, "$transUrl$urlSuffix", xhrFactory);
+    sendConstructor(createAjaxSender(xhrFactory, noCredentials: noCredentials));
+    this.poll = new Polling(ri, receiverFactory, "$transUrl$urlSuffix", xhrFactory, noCredentials: noCredentials);
   }
 
   doCleanup() {
@@ -25,10 +25,10 @@ class AjaxBasedTransport extends BufferedSender {
 
 class XhrStreamingTransport extends AjaxBasedTransport {
 
-  XhrStreamingTransport(ri, transUrl) :
-    super(ri, transUrl, '/xhr_streaming', XhrReceiverFactory, XHRCorsObjectFactory);
+  XhrStreamingTransport(ri, transUrl, {bool noCredentials}) :
+    super(ri, transUrl, '/xhr_streaming', XhrReceiverFactory, XHRCorsObjectFactory, noCredentials: noCredentials);
 
-  static create(ri, transUrl, [baseUrl]) => new XhrStreamingTransport(ri, transUrl);
+  static create(ri, transUrl, {baseUrl, bool noCredentials}) => new XhrStreamingTransport(ri, transUrl, noCredentials: noCredentials);
 
   static bool get enabled {
     return true;

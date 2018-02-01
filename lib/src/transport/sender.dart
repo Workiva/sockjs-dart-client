@@ -85,7 +85,7 @@ class JsonPGenericSender {
       form.enctype = 'application/x-www-form-urlencoded';
       form.acceptCharset = "UTF-8";
       form.children.add(area);
-      document.body.children.add(form);
+      html.document.body.children.add(form);
     }
     form = _sendForm;
     area = _sendArea;
@@ -142,9 +142,9 @@ class JsonPGenericSender {
   }
 }
 
-createAjaxSender(AjaxObjectFactory xhrFactory)
+createAjaxSender(AjaxObjectFactory xhrFactory, {bool noCredentials})
     => (url, payload, callback([status, reason])) {
-        AbstractXHRObject xo = xhrFactory('POST', '$url/xhr_send', payload);
+        AbstractXHRObject xo = xhrFactory('POST', '$url/xhr_send', payload: payload, noCredentials: noCredentials);
         xo.onFinish.listen((e) {
             callback(e.status);
         });

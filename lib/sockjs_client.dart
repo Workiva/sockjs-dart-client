@@ -25,7 +25,7 @@ const OPEN = 1;
 const CLOSING = 2;
 const CLOSED = 3;
 
-typedef TransformFactory(Client client, String transUrl, [String baseUrl]);
+typedef TransformFactory(Client client, String transUrl, {String baseUrl, bool noCredentials});
 
 class Protocol {
   TransformFactory create;
