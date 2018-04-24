@@ -6,18 +6,18 @@ class StatusEvent extends event.Event {
   StatusEvent(String type, [this.status = 0, this.text = ""]) : super(type);
 }
 
-typedef AbstractXHRObject AjaxObjectFactory(String method, String baseUrl, {bool noCredentials, payload});
+typedef AbstractXHRObject AjaxObjectFactory(String method, String baseUrl, {bool noCredentials, dynamic payload});
 
 class AbstractXHRObject extends Object with event.Emitter {
 
   html.HttpRequest xhr;
   StreamSubscription changeSubscription;
 
-  Stream get onChunk => this["chunk"];
-  Stream get onFinish => this["finish"];
-  Stream get onTimeout => this["timeout"];
+  Stream<StatusEvent> get onChunk => getEventStream<StatusEvent>('chunk');
+  Stream<StatusEvent> get onFinish => getEventStream<StatusEvent>('finish');
+  Stream<StatusEvent> get onTimeout => getEventStream<StatusEvent>('timeout');
 
-  _start(method, url, payload, {bool noCredentials: false, headers}) {
+  void _start(String method, String url, dynamic payload, {bool noCredentials: false, Map<String, String> headers}) {
 
     try {
         xhr = new html.HttpRequest();
@@ -61,10 +61,11 @@ class AbstractXHRObject extends Object with event.Emitter {
     xhr.send(payload);
   }
 
-  _readyStateHandler(html.Event evt) {
+  void _readyStateHandler(html.Event evt) {
     switch (xhr.readyState) {
       case 3:
-        var text, status;
+        String text;
+        int status;
         // IE doesn't like peeking into responseText or status
         // on Microsoft.XMLHTTP and readystate=3
         try {
@@ -83,7 +84,7 @@ class AbstractXHRObject extends Object with event.Emitter {
     }
   }
 
-  _cleanup([abort = false]) {
+  void _cleanup([bool abort = false]) {
 
     if (xhr == null) return;
     // utils.unload_del(that.unload_ref);
@@ -99,14 +100,14 @@ class AbstractXHRObject extends Object with event.Emitter {
     //that.unload_ref = that.xhr = null;
 }
 
-  close() {
+  void close() {
     // TODO(nelsonsilva) - nuke();
     _cleanup(true);
   }
 }
 
 class XHRCorsObject extends AbstractXHRObject {
-   XHRCorsObject(method, url, {headers, noCredentials, payload})  {
+   XHRCorsObject(String method, String url, {Map<String, String> headers, bool noCredentials, dynamic payload})  {
     Timer.run(() =>_start(method, url, payload, noCredentials: noCredentials != null ? noCredentials : false));
    }
 }
@@ -114,16 +115,16 @@ class XHRCorsObject extends AbstractXHRObject {
 
 
 class XHRLocalObject extends AbstractXHRObject {
-  XHRLocalObject(method, url, {headers, noCredentials, payload}) {
+  XHRLocalObject(String method, String url, {Map<String, String> headers, bool noCredentials, dynamic payload}) {
     Timer.run(() =>_start(method, url, payload, noCredentials: noCredentials != null ? noCredentials : true));
     }
 }
 
-AbstractXHRObject XHRLocalObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) {
+AbstractXHRObject XHRLocalObjectFactory(String method, String baseUrl, {bool noCredentials, dynamic payload}) {
   return new XHRLocalObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
 }
 
-AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) {
+AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, dynamic payload}) {
   return new XHRCorsObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
 }
 
@@ -131,7 +132,7 @@ AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl, {bool noCr
 // 2. Is natively via XDR
 // 3. Nope, but postMessage is there so it should work via the Iframe.
 // 4. Nope, sorry.
-isXHRCorsCapable() {
+int isXHRCorsCapable() {
     return 1;
 
     /*

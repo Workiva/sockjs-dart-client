@@ -1,12 +1,20 @@
 language: dart
+
 dart:
   - stable
-with_content_shell: true
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3
+  - dev
+
+# Workaround for issue with sandboxed Chrome in containerized Travis builds.
+sudo: required
+addons:
+  chrome: stable
+
+# Re-use downloaded pub packages everywhere.
+cache:
+  directories:
+    - $HOME/.pub-cache
+
+before_script: npm install
 script:
-  - npm install
-  - pub run dart_dev test --unit
-  - pub run dart_dev test --integration
+  - pub run dart_dev analyze
+  - ./tool/travis.sh test

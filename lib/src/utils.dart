@@ -2,7 +2,8 @@ library utils;
 
 import 'dart:math' as Math;
 import 'dart:html';
-import 'dart:convert';
+
+import "package:dart2_constant/convert.dart" as convert;
 
 import "../sockjs_client.dart" as SockJS;
 
@@ -30,9 +31,9 @@ String random_number_string(max) {
     return s.substring(s.length - t);
 }
 
-bool flatUrl(url) => url.indexOf('?') == -1 && url.indexOf('#') == -1;
+bool flatUrl(String url) => url.indexOf('?') == -1 && url.indexOf('#') == -1;
 
-amendUrl(String url) {
+String amendUrl(String url) {
     var dl = window.location;
 
     if (url == null) {
@@ -55,7 +56,7 @@ amendUrl(String url) {
     return url;
 }
 
-closeFrame(code, reason) => 'c${JSON.encode([code, reason])}';
+closeFrame(code, reason) => 'c${convert.json.encode([code, reason])}';
 
 bool userSetCode(int code) => code == 1000 || (code >= 3000 && code <= 4999);
 
@@ -79,7 +80,7 @@ bool isSameOriginUrl(String url_a, [String url_b]) {
               == url_b.split('/').getRange(0,3).join('/'));
 }
 
-String quote(String string) => JSON.encode(string);
+String quote(String string) => convert.json.encode(string);
 
 const _all_protocols = const [
                        'websocket',
@@ -92,25 +93,24 @@ const _all_protocols = const [
                       'iframe-xhr-polling',
                       'jsonp-polling'];
 
-Map probeProtocols() {
-    var probed = {};
-    _all_protocols.forEach((protocol) {
+Map<String, bool> probeProtocols() {
+    final probed = <String, bool>{};
+    for (final protocol in _all_protocols) {
         // User can have a typo in protocol name.
         probed[protocol] = SockJS.PROTOCOLS.containsKey(protocol) && SockJS.PROTOCOLS[protocol].enabled;
-    });
+    }
     return probed;
 }
 
-List detectProtocols(Map probed, [List protocols_whitelist, SockJS.Info info] ) {
-    var pe = {},
-        protocols = [];
+List<String> detectProtocols(Map<String, bool> probed, [List<String> protocols_whitelist, SockJS.Info info] ) {
+    final pe = <String, bool>{};
+    final protocols = <String>[];
     if (protocols_whitelist == null) {
       protocols_whitelist = _all_protocols;
     }
     protocols_whitelist.forEach((protocol) => pe[protocol] = probed[protocol]);
 
-    var maybe_push;
-    maybe_push = (List protos) {
+    void maybe_push(List<String> protos) {
         var proto = protos.removeAt(0);
         if (pe[proto] != null) {
             protocols.add(proto);

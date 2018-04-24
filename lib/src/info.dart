@@ -9,7 +9,7 @@ class Info {
 
   Info.fromJSON(Map json) {
     websocket = json["websocket"];
-    origins = json["origins"];
+    origins = new List<String>.from(json["origins"]);
     cookieNeeded = json["cookie_needed"];
     entropy = json["entropy"];
     nullOrigin = (html.document.domain == null);
@@ -26,7 +26,7 @@ abstract class InfoReceiver extends Object with event.Emitter {
 
   InfoReceiver._();
 
-  Stream<event.Event> get onFinish => this["finish"];
+  Stream<InfoReceiverEvent> get onFinish => getEventStream<InfoReceiverEvent>('finish');
 
   factory InfoReceiver.forURL(String baseUrl) {
     if (utils.isSameOriginUrl(baseUrl)) {
@@ -62,12 +62,12 @@ class AjaxInfoReceiver extends InfoReceiver {
 
     var tref = new Timer(new Duration(milliseconds:8000), () => dispatch("timeout"));
 
-    xo.onFinish.listen( (StatusEvent evt) {
+    xo.onFinish.listen((StatusEvent evt) {
         tref.cancel();
         tref = null;
         if (evt.status == 200) {
             var rtt = new DateTime.now().millisecondsSinceEpoch - t0;
-            var info = new Info.fromJSON(JSON.decode(evt.text));
+            var info = new Info.fromJSON(convert.json.decode(evt.text));
             dispatch(new InfoReceiverEvent("finish", info, rtt));
         } else {
             dispatch(new InfoReceiverEvent("finish"));
@@ -135,7 +135,7 @@ class WInfoReceiverIframe {
     var ir = new AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
     ir.onFinish.listen( (event.Event evt) {
       if (evt is InfoReceiverEvent) {
-        ri._didMessage('m${JSON.encode([evt.info, evt.rtt])}');
+        ri._didMessage('m${convert.json.encode([evt.info, evt.rtt])}');
       }
       ri._didClose();
     });

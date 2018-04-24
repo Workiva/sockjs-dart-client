@@ -69,7 +69,8 @@ void integrationSuite(Client createEchoClient(), Client createCorClient(), Clien
     Client client = createEchoClient();
     await client.onOpen.first;
     client.close();
-    await client.onClose.first;
+    final closeEvent = await client.onClose.first;
+    expect(closeEvent.code == 1000 /* websocket */ || closeEvent.code == 0 /* xhr */, isTrue);
   });
 
   test('client closing the connection with code and reason', () async {

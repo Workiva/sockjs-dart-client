@@ -4,13 +4,13 @@ class CloseEvent extends event.Event {
   int code;
   String reason;
   bool wasClean;
-  var lastEvent;
+  dynamic lastEvent;
 
   CloseEvent({this.code, this.reason, this.wasClean, this.lastEvent}) : super("close");
 }
 
 class MessageEvent extends event.Event {
-  var data;
+  String data;
   MessageEvent(this.data) : super("message");
 }
 
@@ -22,22 +22,22 @@ class Client extends Object with event.Emitter {
   String _baseUrl;
   String server = null;
   String protocol = null;
-  List _protocols = [];
+  List<String> _protocols = <String>[];
 
   int readyState = CONNECTING;
 
   Info info;
   num rtt;
   num rto;
-  List<String> protocolsWhitelist = [];
+  List<String> protocolsWhitelist = <String>[];
   num roundTrips;
   num timeout;
 
   bool noCredentials;
 
-  var _ir;
+  InfoReceiver _ir;
 
-  var _transport = null;
+  dynamic _transport = null;
   Timer _transportTref;
 
   Client(String url, {this.devel: false,
@@ -68,15 +68,15 @@ class Client extends Object with event.Emitter {
     });
   }
 
-  Stream get onOpen => this["open"];
-  Stream get onMessage => this["message"];
-  Stream get onClose => this["close"];
-  Stream get onHeartbeat => this["heartbeat"];
+  Stream<event.Event> get onOpen => getEventStream<event.Event>('open');
+  Stream<MessageEvent> get onMessage => getEventStream<MessageEvent>('message');
+  Stream<CloseEvent> get onClose => getEventStream<CloseEvent>('close');
+  Stream<event.Event> get onHeartbeat => getEventStream<event.Event>('heartbeat');
 
   void close([int code, String reason]) {
     if (_transport != null) {
       if (_transport is WebSocketTransport) {
-        _transport.doClose(code, reason);
+        _transport.doClose(code ?? 1000, reason);
       } else if (_transport is XhrStreamingTransport) {
         if (code == null) {
           code = 0;
@@ -89,7 +89,7 @@ class Client extends Object with event.Emitter {
     }
   }
 
-  send(data) {
+  bool send(String data) {
     if (readyState == CONNECTING) {
         throw 'INVALID_STATE_ERR';
     }
@@ -99,14 +99,14 @@ class Client extends Object with event.Emitter {
     return true;
   }
 
-  _didClose([int code = 0, String reason = "", bool force = false]) {
+  void _didClose([int code = 0, String reason = "", bool force = false]) {
     if (readyState != CONNECTING &&
         readyState != OPEN &&
         readyState != CLOSING) {
             throw 'INVALID_STATE_ERR';
     }
     if (_ir != null) {
-        _ir.nuke();
+//        _ir.nuke();
         _ir = null;
     }
 
@@ -135,7 +135,7 @@ class Client extends Object with event.Emitter {
     Timer.run(() => dispatch(close_event));
   }
 
-  _dispatchOpen() {
+  void _dispatchOpen() {
     if (readyState == CONNECTING) {
         if (_transportTref != null) {
             _transportTref.cancel();
@@ -150,21 +150,21 @@ class Client extends Object with event.Emitter {
     }
   }
 
-  _dispatchMessage(data) {
+  void _dispatchMessage(String data) {
     if (readyState != OPEN) {
-            return;
+      return;
     }
    dispatch(new MessageEvent(data));
   }
 
-  _dispatchHeartbeat() {
+  void _dispatchHeartbeat() {
     if (readyState != OPEN) {
         return;
     }
     dispatch("heartbeat");
   }
 
-  _didMessage(String data) {
+  void _didMessage(String data) {
     var type = data[0];
     switch(type) {
     case 'o':
@@ -173,7 +173,7 @@ class Client extends Object with event.Emitter {
     case 'a':
       var s = data.substring(1);
       if (s == null) s = '[]';
-      var payload = JSON.decode(s);
+      var payload = convert.json.decode(s);
       for(var i=0; i < payload.length; i++){
           _dispatchMessage(payload[i]);
       }
@@ -181,13 +181,13 @@ class Client extends Object with event.Emitter {
     case 'm':
       var s = data.substring(1);
       if (s == null) s = 'null';
-      var payload = JSON.decode(s);
+      var payload = convert.json.decode(s);
       _dispatchMessage(payload);
       break;
     case 'c':
       var s = data.substring(1);
       if (s == null) s = '[]';
-      var payload = JSON.decode(s);
+      var payload = convert.json.decode(s);
       _didClose(payload[0], payload[1]);
       break;
     case 'h':
@@ -258,10 +258,10 @@ class Client extends Object with event.Emitter {
     }
   }
 
-  _applyInfo(var info) {
+  _applyInfo(Info info) {
     this.info = info;
     this.rto = utils.countRTO(rtt);
-    var probed = utils.probeProtocols();
+    final probed = utils.probeProtocols();
     _protocols = utils.detectProtocols(probed, protocolsWhitelist, info);
   }
 
