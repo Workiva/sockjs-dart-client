@@ -10,7 +10,7 @@ main(List<String> args) async {
   config.analyze
     ..entryPoints = ['example/', 'lib/', 'tool/']
     ..strong = true;
-  config.format.directories = ['example/', 'lib/', 'tool/'];
+  config.format.paths = ['example/', 'lib/', 'tool/'];
 
   config.coverage
     ..before = [_startServer]
@@ -20,7 +20,7 @@ main(List<String> args) async {
     ..after = [_stopServer]
     ..unitTests = ['test/xhr_streaming_test.dart']
     ..integrationTests = ['test/sockjs_client_integration_test.dart']
-    ..platforms = ['content-shell'];
+    ..platforms = ['chrome'];
 
   await dev(args);
 }

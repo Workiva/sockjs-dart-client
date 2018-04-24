@@ -1,5 +1,5 @@
 @TestOn('browser')
-library sockjs_client.test.sockjs_client_test;
+library sockjs_client.test.xhr_streaming_test;
 
 import 'dart:async';
 
