@@ -1,7 +1,7 @@
 language: dart
 
 dart:
-  - stable
+  - 1.24.3
   - dev
 
 # Workaround for issue with sandboxed Chrome in containerized Travis builds.
@@ -16,5 +16,5 @@ cache:
 
 before_script: npm install
 script:
-  - pub run dart_dev analyze
+  - dartanalyzer .
   - ./tool/travis.sh test

@@ -12,27 +12,26 @@ if [ -z "$TASK" ]; then
   exit 1
 fi
 
+DART_VERSION=$(dart --version 2>&1)
+DART_2_PREFIX="Dart VM version: 2"
+
 # Run the correct task type.
 case $TASK in
   test)
     echo -e '\033[1mTASK: Testing [test]\033[22m'
-
-    echo -e 'pub build test --web-compiler=dartdevc'
-    # Precompile tests to avoid timeouts/hung builds.
-    pub build test --web-compiler=dartdevc
-    # The --precompile option requires that it be given a merged output dir with
-    # both compiled JS files and the source .dart files.
-    # NOTE: Once we're on Dart 2 for good, we can switch to build_runner which
-    # does all of this for us.
-    cp -R test/** build/test/
 
     node tool/server.js &
     SOCKJS_SERVER=$!
 
     sleep 2
 
-    echo -e 'pub run test -j 1 -p chrome --precompiled=build/'
-    pub run test -j 1 -p chrome --precompiled=build/
+    if [[ $DART_VERSION = $DART_2_PREFIX* ]]; then
+      echo -e 'pub run build_runner test -- -P all -P travis'
+      pub run build_runner test -- -P all -P travis
+    else
+      echo -e 'pub run test -P all -P travis'
+      pub run test -P all -P travis
+    fi
 
     kill $SOCKJS_SERVER
     sleep 2

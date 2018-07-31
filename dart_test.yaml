@@ -1,0 +1,47 @@
+# Dart 1:
+# -------
+#
+# Run unit tests:
+#
+#     $ pub run test
+#
+# Run integration tests:
+#
+#     $ node tool/server.js
+#     $ pub run test -P integration
+#
+#
+# Dart 2:
+# -------
+#
+# Run unit tests:
+#
+#     $ pub run build_runner test
+#
+# Run integration tests:
+#
+#     $ node tool/server.js
+#     $ pub run build_runner test -- -P integration
+platforms:
+- chrome
+
+paths:
+- test/xhr_streaming_test.dart
+
+presets:
+  all:
+    concurrency: 1
+    paths:
+      - test/xhr_streaming_test.dart
+      - test/sockjs_client_integration_test.dart
+
+  integration:
+    concurrency: 1
+    paths:
+      - test/sockjs_client_integration_test.dart
+
+  travis:
+    reporter: expanded
+    # The SockJS integration test server sometimes gets overloaded and rejects
+    # connections. Retries are enabled during CI to mitigate these failures.
+    retry: 3
