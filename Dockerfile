@@ -29,9 +29,9 @@ RUN mkdir /root/.ssh && \
 RUN echo "installing npm packages"
 RUN npm install
 RUN echo "Starting the script section" && \
-		pub get && \
-		pub run dart_dev analyze && \
-		echo "script section completed"
+    pub get && \
+    dartanalyzer lib example && \
+    echo "script section completed"
 ARG BUILD_ARTIFACTS_BUILD=/build/pubspec.lock
 
 RUN mkdir /audit/
