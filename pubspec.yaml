@@ -1,5 +1,5 @@
 name:  sockjs_client
-version: 0.3.4
+version: 0.3.5
 description:  A SockJS client in Dart
 homepage: https://github.com/nelsonsilva/sockjs-dart-client
 authors:
