@@ -22,10 +22,28 @@ $ pub get && npm install
 
 ### Tests
 ```
-$ pub run dart_dev test --integration
-```
+Dart 1:
+-------
 
-### Coverage
-```
-$ pub run dart_dev coverage --integration
+Run unit tests:
+
+    $ pub run test
+
+Run integration tests:
+
+    $ node tool/server.js
+    $ pub run test -P integration
+
+
+Dart 2:
+-------
+
+Run unit tests:
+
+    $ pub run build_runner test
+
+Run integration tests:
+
+    $ node tool/server.js
+    $ pub run build_runner test -- -P integration
 ```
