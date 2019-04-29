@@ -31,9 +31,10 @@ RUN npm install
 RUN echo "Starting the script section" && \
     pub get && \
     dartanalyzer lib example && \
+    tar czvf sockjs_client.pub.tgz LICENSE README.md pubspec.yaml analysis_options.yaml lib/ && \
     echo "script section completed"
 ARG BUILD_ARTIFACTS_BUILD=/build/pubspec.lock
-
+ARG BUILD_ARTIFACTS_PUB=/build/sockjs_client.pub.tgz
 RUN mkdir /audit/
 ARG BUILD_ARTIFACTS_AUDIT=/audit/*
 
