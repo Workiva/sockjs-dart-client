@@ -14,9 +14,8 @@ cache:
   directories:
     - $HOME/.pub-cache
 
-before_script:
-  - npm install
-  - ./tool/pub2get.sh
+before_install: ./tool/pub2get.sh
+before_script: npm install
 script:
   - dartanalyzer .
   - ./tool/travis.sh test
