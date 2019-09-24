@@ -2,6 +2,7 @@
 
 # Fast fail the script on failures.
 set -e
+set -x
 
 # Check arguments.
 TASK=$1
@@ -26,10 +27,8 @@ case $TASK in
     sleep 2
 
     if [[ $DART_VERSION = $DART_2_PREFIX* ]]; then
-      echo -e 'pub run build_runner test -- -P all -P travis'
-      pub run build_runner test -- -P all -P travis
+      pub run build_runner test --release -- -P all -P travis
     else
-      echo -e 'pub run test -P all -P travis'
       pub run test -P all -P travis
     fi
 
