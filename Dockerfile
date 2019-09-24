@@ -1,3 +1,4 @@
+FROM google/dart:2.5 as dart2
 FROM drydock-prod.workiva.net/workiva/smithy-runner-generator:350667 as build
 
 ARG NPM_TOKEN
@@ -26,13 +27,19 @@ RUN mkdir /root/.ssh && \
     chmod 700 /root/.ssh/ && \
     umask 0077 && echo "$GIT_SSH_KEY" >/root/.ssh/id_rsa && \
     eval "$(ssh-agent -s)" && ssh-add /root/.ssh/id_rsa
+
 RUN echo "installing npm packages"
 RUN npm install
+
+RUN echo "Getting Dart dependencies"
+COPY --from=dart2 /usr/lib/dart /usr/lib/dart2
+RUN _PUB_TEST_SDK_VERSION=1.24.3 /usr/lib/dart2/bin/pub get --no-precompile && pub get
+
 RUN echo "Starting the script section" && \
-    pub get && \
     dartanalyzer lib example && \
     tar czvf sockjs_client.pub.tgz LICENSE README.md pubspec.yaml analysis_options.yaml lib/ && \
     echo "script section completed"
+
 ARG BUILD_ARTIFACTS_BUILD=/build/pubspec.lock
 ARG BUILD_ARTIFACTS_PUB=/build/sockjs_client.pub.tgz
 RUN mkdir /audit/
