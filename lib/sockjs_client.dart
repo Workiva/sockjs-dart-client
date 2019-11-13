@@ -41,11 +41,11 @@ class Protocol {
 }
 
 Map<String, Protocol> PROTOCOLS = {
-  "websocket": new Protocol(
+  "websocket": Protocol(
       create: WebSocketTransport.create,
       enabled: WebSocketTransport.enabled,
       roundTrips: WebSocketTransport.roundTrips),
-  "xhr-streaming": new Protocol(
+  "xhr-streaming": Protocol(
       create: XhrStreamingTransport.create,
       enabled: XhrStreamingTransport.enabled,
       roundTrips: XhrStreamingTransport.roundTrips)

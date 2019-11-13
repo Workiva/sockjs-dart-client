@@ -35,7 +35,7 @@ class BufferedSender {
       sendStop = null;
       tref.cancel();
     };
-    tref = new Timer(new Duration(milliseconds: 25), () {
+    tref = Timer(Duration(milliseconds: 25), () {
       sendStop = null;
       sendSchedule();
     });
@@ -73,8 +73,8 @@ class JsonPGenericSender {
     html.TextAreaElement area;
 
     if (_sendForm == null) {
-      form = _sendForm = new html.Element.tag('form');
-      area = _sendArea = new html.Element.tag('textarea');
+      form = _sendForm = html.Element.tag('form');
+      area = _sendArea = html.Element.tag('textarea');
       area.name = 'd';
       form.style.display = 'none';
       form.style.position = 'absolute';
@@ -93,9 +93,9 @@ class JsonPGenericSender {
     html.IFrameElement iframe;
     try {
       // ie6 dynamic iframes with target="" support (thanks Chris Lambacher)
-      iframe = new html.Element.html('<iframe name="$id">');
+      iframe = html.Element.html('<iframe name="$id">');
     } catch (x) {
-      iframe = new html.Element.tag('iframe');
+      iframe = html.Element.tag('iframe');
       iframe.name = id;
     }
     iframe.id = id;
@@ -110,7 +110,7 @@ class JsonPGenericSender {
     form.submit();
 
     var readyStateChangeHandler = (html.Event e) {
-      if (new JsObject.fromBrowserObject(iframe)["readyState"] == 'complete')
+      if (JsObject.fromBrowserObject(iframe)["readyState"] == 'complete')
         completed(null);
     };
 
@@ -122,7 +122,7 @@ class JsonPGenericSender {
 
       // Opera mini doesn't like if we GC iframe
       // immediately, thus this timeout.
-      new Timer(new Duration(milliseconds: 500), () {
+      Timer(Duration(milliseconds: 500), () {
         iframe.remove();
         iframe = null;
       });

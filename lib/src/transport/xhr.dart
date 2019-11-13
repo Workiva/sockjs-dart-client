@@ -11,8 +11,7 @@ class AjaxBasedTransport extends BufferedSender {
     this.ri = ri;
     this.transUrl = transUrl;
     sendConstructor(createAjaxSender(xhrFactory, noCredentials: noCredentials));
-    this.poll = new Polling(
-        ri, receiverFactory, "$transUrl$urlSuffix", xhrFactory,
+    this.poll = Polling(ri, receiverFactory, "$transUrl$urlSuffix", xhrFactory,
         noCredentials: noCredentials);
   }
 
@@ -33,7 +32,7 @@ class XhrStreamingTransport extends AjaxBasedTransport {
             noCredentials: noCredentials);
 
   static create(ri, transUrl, {baseUrl, bool noCredentials}) =>
-      new XhrStreamingTransport(ri, transUrl, noCredentials: noCredentials);
+      XhrStreamingTransport(ri, transUrl, noCredentials: noCredentials);
 
   static bool get enabled {
     return true;

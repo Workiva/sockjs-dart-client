@@ -10,8 +10,8 @@ FormElement form = querySelector('#first form');
 
 _log(LogRecord l) {
   div
-    ..append(new Element.html("<code/>")..text = "${l.message}")
-    ..append(new Element.html("<br>"))
+    ..append(Element.html("<code/>")..text = "${l.message}")
+    ..append(Element.html("<br>"))
     ..scrollTop += 10000;
 }
 
@@ -20,11 +20,11 @@ main() {
   Logger.root.level = Level.INFO;
   Logger.root.onRecord.listen(_log);
 
-  final LOG = new Logger("sockjs");
+  final LOG = Logger("sockjs");
 
   LOG.info("Starting");
   var sockjs_url = 'http://127.0.0.1:8081/echo';
-  var sockjs = new SockJS.Client(sockjs_url,
+  var sockjs = SockJS.Client(sockjs_url,
       protocolsWhitelist: ['websocket', 'xhr-streaming'], debug: true);
   querySelector('#first input').focus();
 

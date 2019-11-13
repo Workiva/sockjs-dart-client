@@ -8,7 +8,7 @@ class Event {
 }
 
 class Emitter {
-  final _evtController = new StreamController<Event>.broadcast();
+  final _evtController = StreamController<Event>.broadcast();
 
   Stream<Event> operator [](type) =>
       _evtController.stream.where((e) => e.type == type);
@@ -20,7 +20,7 @@ class Emitter {
   }
 
   dispatch(evtOrType) {
-    var evt = (evtOrType is String) ? new Event(evtOrType) : evtOrType;
+    var evt = (evtOrType is String) ? Event(evtOrType) : evtOrType;
     _evtController.add(evt);
   }
 }

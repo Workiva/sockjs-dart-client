@@ -9,7 +9,7 @@ class Info {
 
   Info.fromJSON(Map json) {
     websocket = json["websocket"];
-    origins = new List<String>.from(json["origins"]);
+    origins = List<String>.from(json["origins"]);
     cookieNeeded = json["cookie_needed"];
     entropy = json["entropy"];
     nullOrigin = (html.document.domain == null);
@@ -32,20 +32,20 @@ abstract class InfoReceiver extends Object with event.Emitter {
     if (utils.isSameOriginUrl(baseUrl)) {
       // If, for some reason, we have SockJS locally - there's no
       // need to start up the complex machinery. Just use ajax.
-      return new AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
+      return AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
     }
     switch (isXHRCorsCapable()) {
       case 1:
         // XHRLocalObject -> no_credentials=true
-        return new AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
+        return AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
       case 2:
       //return new AjaxInfoReceiver(baseUrl, utils.XDRObject);
       case 3:
         // Opera
-        return new InfoReceiverIframe(baseUrl);
+        return InfoReceiverIframe(baseUrl);
       default:
         // IE 7
-        return new InfoReceiverFake();
+        return InfoReceiverFake();
     }
   }
 }
@@ -56,26 +56,25 @@ class AjaxInfoReceiver extends InfoReceiver {
   }
 
   doXhr(String baseUrl, AjaxObjectFactory xhrFactory) {
-    var t0 = new DateTime.now().millisecondsSinceEpoch;
+    var t0 = DateTime.now().millisecondsSinceEpoch;
     var xo = xhrFactory('GET', "$baseUrl/info");
 
-    var tref =
-        new Timer(new Duration(milliseconds: 8000), () => dispatch("timeout"));
+    var tref = Timer(Duration(milliseconds: 8000), () => dispatch("timeout"));
 
     xo.onFinish.listen((StatusEvent evt) {
       tref.cancel();
       tref = null;
       if (evt.status == 200) {
-        var rtt = new DateTime.now().millisecondsSinceEpoch - t0;
-        var info = new Info.fromJSON(json.decode(evt.text));
-        dispatch(new InfoReceiverEvent("finish", info, rtt));
+        var rtt = DateTime.now().millisecondsSinceEpoch - t0;
+        var info = Info.fromJSON(json.decode(evt.text));
+        dispatch(InfoReceiverEvent("finish", info, rtt));
       } else {
-        dispatch(new InfoReceiverEvent("finish"));
+        dispatch(InfoReceiverEvent("finish"));
       }
     });
     xo.onTimeout.listen((_) {
       xo.close();
-      dispatch(new InfoReceiverEvent("finish"));
+      dispatch(InfoReceiverEvent("finish"));
     });
   }
 }
@@ -120,14 +119,14 @@ class InfoReceiverFake extends InfoReceiver {
     // It may not be possible to do cross domain AJAX to get the info
     // data, for example for IE7. But we want to run JSONP, so let's
     // fake the response, with rtt=2s (rto=6s).
-    new Timer(new Duration(milliseconds: 2000), () => dispatch("finish"));
+    Timer(Duration(milliseconds: 2000), () => dispatch("finish"));
   }
 }
 
 // FacadeJS['w-iframe-info-receiver']
 class WInfoReceiverIframe {
   WInfoReceiverIframe(ri, _trans_url, baseUrl) {
-    var ir = new AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
+    var ir = AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
     ir.onFinish.listen((event.Event evt) {
       if (evt is InfoReceiverEvent) {
         ri._didMessage('m${json.encode([evt.info, evt.rtt])}');

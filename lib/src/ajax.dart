@@ -20,7 +20,7 @@ class AbstractXHRObject extends Object with event.Emitter {
   void _start(String method, String url, dynamic payload,
       {bool noCredentials = false, Map<String, String> headers}) {
     try {
-      xhr = new html.HttpRequest();
+      xhr = html.HttpRequest();
     } catch (x) {}
     ;
 
@@ -44,7 +44,7 @@ class AbstractXHRObject extends Object with event.Emitter {
       xhr.open(method, url);
     } catch (e) {
       // IE raises an exception on wrong port.
-      dispatch(new StatusEvent("finish"));
+      dispatch(StatusEvent("finish"));
       _cleanup();
       return;
     }
@@ -78,11 +78,11 @@ class AbstractXHRObject extends Object with event.Emitter {
         ;
         // IE does return readystate == 3 for 404 answers.
         if (text != null && !text.isEmpty) {
-          dispatch(new StatusEvent("chunk", status, text));
+          dispatch(StatusEvent("chunk", status, text));
         }
         break;
       case 4:
-        dispatch(new StatusEvent("finish", xhr.status, xhr.responseText));
+        dispatch(StatusEvent("finish", xhr.status, xhr.responseText));
         _cleanup(false);
         break;
     }
@@ -128,13 +128,13 @@ class XHRLocalObject extends AbstractXHRObject {
 
 AbstractXHRObject XHRLocalObjectFactory(String method, String baseUrl,
     {bool noCredentials, dynamic payload}) {
-  return new XHRLocalObject(method, baseUrl,
+  return XHRLocalObject(method, baseUrl,
       noCredentials: noCredentials, payload: payload);
 }
 
 AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl,
     {bool noCredentials, dynamic payload}) {
-  return new XHRCorsObject(method, baseUrl,
+  return XHRCorsObject(method, baseUrl,
       noCredentials: noCredentials, payload: payload);
 }
 

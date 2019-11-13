@@ -9,7 +9,7 @@ class WebSocketTransport {
   StreamSubscription closeSubscription;
 
   static create(ri, transUrl, {baseUrl, bool noCredentials}) =>
-      new WebSocketTransport(ri, transUrl);
+      WebSocketTransport(ri, transUrl);
 
   WebSocketTransport(this.ri, transUrl) {
     var url = '$transUrl/websocket';
@@ -21,7 +21,7 @@ class WebSocketTransport {
 
     this.url = url;
 
-    ws = new html.WebSocket(url);
+    ws = html.WebSocket(url);
 
     messageSubscription = ws.onMessage.listen(_msgHandler);
 

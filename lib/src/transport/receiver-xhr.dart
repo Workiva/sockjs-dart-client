@@ -14,7 +14,7 @@ class XhrReceiver extends Receiver {
       readAndBroadcastMessage(e);
       xo = null;
       var reason = (e.status == 200) ? 'network' : 'permanent';
-      dispatch(new CloseEvent(reason: reason));
+      dispatch(CloseEvent(reason: reason));
     });
   }
 
@@ -25,14 +25,14 @@ class XhrReceiver extends Receiver {
       if (p == -1) break;
       buf_pos += p + 1;
       var msg = buf.substring(0, p);
-      dispatch(new MessageEvent(msg));
+      dispatch(MessageEvent(msg));
     }
   }
 
   abort() {
     if (xo != null) {
       xo.close();
-      dispatch(new CloseEvent(reason: 'user'));
+      dispatch(CloseEvent(reason: 'user'));
       xo = null;
     }
   }
@@ -40,5 +40,5 @@ class XhrReceiver extends Receiver {
 
 Receiver XhrReceiverFactory(String recvUrl, AjaxObjectFactory xhrFactory,
     {bool noCredentials}) {
-  return new XhrReceiver(recvUrl, xhrFactory, noCredentials: noCredentials);
+  return XhrReceiver(recvUrl, xhrFactory, noCredentials: noCredentials);
 }

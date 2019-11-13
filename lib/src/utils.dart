@@ -9,7 +9,7 @@ import "../sockjs_client.dart" as SockJS;
 const random_string_chars = 'abcdefghijklmnopqrstuvwxyz0123456789_';
 String random_string(length, [max]) {
   if (max == null) max = random_string_chars.length;
-  var i, ret = [], rnd = new Math.Random(), r;
+  var i, ret = [], rnd = Math.Random(), r;
   for (i = 0; i < length; i++) {
     r = rnd.nextInt(max);
     ret.add(random_string_chars.substring(r, r + 1));
@@ -17,11 +17,11 @@ String random_string(length, [max]) {
   return ret.join('');
 }
 
-int random_number(max) => new Math.Random().nextInt(max);
+int random_number(max) => Math.Random().nextInt(max);
 
 String random_number_string(max) {
   var t = "${max - 1}".length;
-  var l = new List();
+  var l = List();
   for (int i = 0; i < t + 1; i++) {
     l.add('0');
   }
@@ -51,7 +51,7 @@ String amendUrl(String url) {
     url = "${dl.protocol}//${dl.host}$url";
   }
   // strip trailing slashes
-  url = url.replaceAll(new RegExp(r'/[/]+$/'), '');
+  url = url.replaceAll(RegExp(r'/[/]+$/'), '');
   return url;
 }
 

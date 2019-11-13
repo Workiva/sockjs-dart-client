@@ -56,7 +56,7 @@ class Client extends Object with event.Emitter {
       server = utils.random_number_string(1000);
     }
 
-    _ir = new InfoReceiver.forURL(_baseUrl);
+    _ir = InfoReceiver.forURL(_baseUrl);
     _ir.onFinish.listen((InfoReceiverEvent evt) {
       _ir = null;
       if (evt.info != null) {
@@ -116,14 +116,14 @@ class Client extends Object with event.Emitter {
       _transport = null;
     }
 
-    var close_event = new CloseEvent(
+    var close_event = CloseEvent(
         code: code, reason: reason, wasClean: utils.userSetCode(code));
 
     if (!utils.userSetCode(code) && readyState == CONNECTING && !force) {
       if (_tryNextProtocol(close_event)) {
         return;
       }
-      close_event = new CloseEvent(
+      close_event = CloseEvent(
           code: 2000,
           reason: "All transports failed",
           wasClean: false,
@@ -153,7 +153,7 @@ class Client extends Object with event.Emitter {
     if (readyState != OPEN) {
       return;
     }
-    dispatch(new MessageEvent(data));
+    dispatch(MessageEvent(data));
   }
 
   void _dispatchHeartbeat() {
@@ -238,7 +238,7 @@ class Client extends Object with event.Emitter {
           to = rto * roundTrips;
           if (to == 0) to = 5000;
         }
-        _transportTref = new Timer(new Duration(milliseconds: to), () {
+        _transportTref = Timer(Duration(milliseconds: to), () {
           if (readyState == CONNECTING) {
             // I can't understand how it is possible to run
             // this timer, when the state is CLOSED, but

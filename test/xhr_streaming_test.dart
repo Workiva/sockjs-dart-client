@@ -12,14 +12,14 @@ void main() {
       XhrReceiver xhrReceiver =
           XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
 
-      Completer msgCompleter = new Completer();
+      Completer msgCompleter = Completer();
       xhrReceiver.onMessage.listen((e) {
         if (e.data == 'some text') {
           msgCompleter.complete();
         }
       });
 
-      xhrReceiver.xo.dispatch(new StatusEvent('chunk', 200, 'some text\n'));
+      xhrReceiver.xo.dispatch(StatusEvent('chunk', 200, 'some text\n'));
       await msgCompleter.future;
     });
 
@@ -27,8 +27,8 @@ void main() {
       XhrReceiver xhrReceiver =
           XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
 
-      Completer msgCompleter = new Completer();
-      Completer closeCompleter = new Completer();
+      Completer msgCompleter = Completer();
+      Completer closeCompleter = Completer();
 
       xhrReceiver.onMessage.listen((e) {
         if (e.data == 'some text') {
@@ -39,7 +39,7 @@ void main() {
         closeCompleter.complete();
       });
 
-      xhrReceiver.xo.dispatch(new StatusEvent('finish', 200, 'some text\n'));
+      xhrReceiver.xo.dispatch(StatusEvent('finish', 200, 'some text\n'));
       await msgCompleter.future;
       await closeCompleter.future;
     });
@@ -48,7 +48,7 @@ void main() {
 
 AbstractXHRObject MockXHRCorsObjectFactory(String method, String baseUrl,
     {bool noCredentials, payload}) {
-  return new MockXHRCorsObject();
+  return MockXHRCorsObject();
 }
 
 class MockXHRCorsObject extends AbstractXHRObject {
