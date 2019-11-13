@@ -4,10 +4,10 @@ import "dart:async";
 import "dart:html" as html;
 import "dart:js";
 
-import "package:dart2_constant/convert.dart" as convert;
 
 import "src/events.dart" as event;
 import "src/utils.dart" as utils;
+import 'dart:convert';
 
 part "src/ajax.dart";
 part "src/client.dart";
