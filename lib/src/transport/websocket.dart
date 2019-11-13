@@ -8,20 +8,20 @@ class WebSocketTransport {
   StreamSubscription messageSubscription;
   StreamSubscription closeSubscription;
 
-  static create(ri, transUrl, {baseUrl, bool noCredentials}) => new WebSocketTransport(ri, transUrl);
+  static create(ri, transUrl, {baseUrl, bool noCredentials}) =>
+      new WebSocketTransport(ri, transUrl);
 
   WebSocketTransport(this.ri, transUrl) {
     var url = '$transUrl/websocket';
     if (url.startsWith('https')) {
-        url = 'wss${url.substring(5)}';
+      url = 'wss${url.substring(5)}';
     } else {
-        url = 'ws${url.substring(4)}';
+      url = 'ws${url.substring(4)}';
     }
 
     this.url = url;
 
     ws = new html.WebSocket(url);
-
 
     messageSubscription = ws.onMessage.listen(_msgHandler);
 
@@ -53,12 +53,12 @@ class WebSocketTransport {
 
   doCleanup() {
     if (ws != null) {
-        messageSubscription.cancel();
-        closeSubscription.cancel();
-        ws.close();
-        //utils.unload_del(that.unload_ref);
-        //that.unload_ref = null;
-        ri = ws = null;
+      messageSubscription.cancel();
+      closeSubscription.cancel();
+      ws.close();
+      //utils.unload_del(that.unload_ref);
+      //that.unload_ref = null;
+      ri = ws = null;
     }
   }
 
@@ -83,7 +83,6 @@ class WebSocketTransport {
 
     return res;
   }
-
 
 // In theory, ws should require 1 round trip. But in chrome, this is
 // not very stable over SSL. Most likely a ws connection requires a

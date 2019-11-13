@@ -1,7 +1,6 @@
 part of sockjs_client;
 
 class Polling {
-
   Client ri;
   var receiverFactory;
   String recvUrl;
@@ -10,7 +9,8 @@ class Polling {
   bool pollIsClosing = false;
   bool noCredentials;
 
-  Polling(this.ri, this.receiverFactory, this.recvUrl, this.xhrFactory, {bool this.noCredentials}) {
+  Polling(this.ri, this.receiverFactory, this.recvUrl, this.xhrFactory,
+      {bool this.noCredentials}) {
     _scheduleRecv();
   }
 
@@ -24,25 +24,25 @@ class Polling {
     var messageSubscription, closeSubscription;
 
     var closeHandler = (e) {
-        messageSubscription.cancel();
-        closeSubscription.cancel();
-        poll = null;
-        if (!pollIsClosing) {
-            if (e.reason == 'permanent') {
-                ri._didClose(1006, 'Polling error (${e.reason})');
-            } else {
-                _scheduleRecv();
-            }
+      messageSubscription.cancel();
+      closeSubscription.cancel();
+      poll = null;
+      if (!pollIsClosing) {
+        if (e.reason == 'permanent') {
+          ri._didClose(1006, 'Polling error (${e.reason})');
+        } else {
+          _scheduleRecv();
         }
-     };
-     messageSubscription = poll.onMessage.listen(msgHandler);
-     closeSubscription = poll.onClose.listen(closeHandler);
+      }
+    };
+    messageSubscription = poll.onMessage.listen(msgHandler);
+    closeSubscription = poll.onClose.listen(closeHandler);
   }
 
   abort() {
-      pollIsClosing = true;
-      if (poll != null) {
-          poll.abort();
-      }
+    pollIsClosing = true;
+    if (poll != null) {
+      poll.abort();
+    }
   }
 }

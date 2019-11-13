@@ -6,7 +6,8 @@ class CloseEvent extends event.Event {
   bool wasClean;
   dynamic lastEvent;
 
-  CloseEvent({this.code, this.reason, this.wasClean, this.lastEvent}) : super("close");
+  CloseEvent({this.code, this.reason, this.wasClean, this.lastEvent})
+      : super("close");
 }
 
 class MessageEvent extends event.Event {
@@ -15,7 +16,6 @@ class MessageEvent extends event.Event {
 }
 
 class Client extends Object with event.Emitter {
-
   bool debug;
   bool devel;
 
@@ -40,16 +40,16 @@ class Client extends Object with event.Emitter {
   dynamic _transport = null;
   Timer _transportTref;
 
-  Client(String url, {this.devel: false,
-                      this.debug: false,
-                      this.protocolsWhitelist,
-                      this.info,
-                      this.noCredentials: false,
-                      this.rtt: 0,
-                      this.server,
-                      this.roundTrips,
-                      this.timeout}) {
-
+  Client(String url,
+      {this.devel: false,
+      this.debug: false,
+      this.protocolsWhitelist,
+      this.info,
+      this.noCredentials: false,
+      this.rtt: 0,
+      this.server,
+      this.roundTrips,
+      this.timeout}) {
     _baseUrl = utils.amendUrl(url);
 
     if (server == null) {
@@ -58,20 +58,21 @@ class Client extends Object with event.Emitter {
 
     _ir = new InfoReceiver.forURL(_baseUrl);
     _ir.onFinish.listen((InfoReceiverEvent evt) {
-        _ir = null;
-        if (evt.info != null) {
-            _applyInfo(evt.info);
-            _didClose();
-        } else {
-            _didClose(1002, 'Can\'t connect to server', true);
-        }
+      _ir = null;
+      if (evt.info != null) {
+        _applyInfo(evt.info);
+        _didClose();
+      } else {
+        _didClose(1002, 'Can\'t connect to server', true);
+      }
     });
   }
 
   Stream<event.Event> get onOpen => getEventStream<event.Event>('open');
   Stream<MessageEvent> get onMessage => getEventStream<MessageEvent>('message');
   Stream<CloseEvent> get onClose => getEventStream<CloseEvent>('close');
-  Stream<event.Event> get onHeartbeat => getEventStream<event.Event>('heartbeat');
+  Stream<event.Event> get onHeartbeat =>
+      getEventStream<event.Event>('heartbeat');
 
   void close([int code, String reason]) {
     if (_transport != null) {
@@ -91,10 +92,10 @@ class Client extends Object with event.Emitter {
 
   bool send(String data) {
     if (readyState == CONNECTING) {
-        throw 'INVALID_STATE_ERR';
+      throw 'INVALID_STATE_ERR';
     }
     if (readyState == OPEN) {
-        _transport.doSend(utils.quote(data));
+      _transport.doSend(utils.quote(data));
     }
     return true;
   }
@@ -103,32 +104,30 @@ class Client extends Object with event.Emitter {
     if (readyState != CONNECTING &&
         readyState != OPEN &&
         readyState != CLOSING) {
-            throw 'INVALID_STATE_ERR';
+      throw 'INVALID_STATE_ERR';
     }
     if (_ir != null) {
 //        _ir.nuke();
-        _ir = null;
+      _ir = null;
     }
 
     if (_transport != null) {
-        _transport.doCleanup();
-        _transport = null;
+      _transport.doCleanup();
+      _transport = null;
     }
 
     var close_event = new CloseEvent(
-        code: code,
-        reason: reason,
-        wasClean: utils.userSetCode(code));
+        code: code, reason: reason, wasClean: utils.userSetCode(code));
 
-    if (!utils.userSetCode(code) &&
-        readyState == CONNECTING && !force) {
-        if (_tryNextProtocol(close_event)) {
-            return;
-        }
-        close_event = new CloseEvent( code: 2000,
-                                      reason: "All transports failed",
-                                      wasClean: false,
-                                      lastEvent: close_event );
+    if (!utils.userSetCode(code) && readyState == CONNECTING && !force) {
+      if (_tryNextProtocol(close_event)) {
+        return;
+      }
+      close_event = new CloseEvent(
+          code: 2000,
+          reason: "All transports failed",
+          wasClean: false,
+          lastEvent: close_event);
     }
     readyState = CLOSED;
 
@@ -137,16 +136,16 @@ class Client extends Object with event.Emitter {
 
   void _dispatchOpen() {
     if (readyState == CONNECTING) {
-        if (_transportTref != null) {
-            _transportTref.cancel();
-            _transportTref = null;
-        }
-        readyState = OPEN;
-        dispatch("open");
+      if (_transportTref != null) {
+        _transportTref.cancel();
+        _transportTref = null;
+      }
+      readyState = OPEN;
+      dispatch("open");
     } else {
-        // The server might have been restarted, and lost track of our
-        // connection.
-        _didClose(1006, "Server lost session");
+      // The server might have been restarted, and lost track of our
+      // connection.
+      _didClose(1006, "Server lost session");
     }
   }
 
@@ -154,60 +153,59 @@ class Client extends Object with event.Emitter {
     if (readyState != OPEN) {
       return;
     }
-   dispatch(new MessageEvent(data));
+    dispatch(new MessageEvent(data));
   }
 
   void _dispatchHeartbeat() {
     if (readyState != OPEN) {
-        return;
+      return;
     }
     dispatch("heartbeat");
   }
 
   void _didMessage(String data) {
     var type = data[0];
-    switch(type) {
-    case 'o':
+    switch (type) {
+      case 'o':
         _dispatchOpen();
         break;
-    case 'a':
-      var s = data.substring(1);
-      if (s == null) s = '[]';
-      var payload = json.decode(s);
-      for(var i=0; i < payload.length; i++){
+      case 'a':
+        var s = data.substring(1);
+        if (s == null) s = '[]';
+        var payload = json.decode(s);
+        for (var i = 0; i < payload.length; i++) {
           _dispatchMessage(payload[i]);
-      }
-      break;
-    case 'm':
-      var s = data.substring(1);
-      if (s == null) s = 'null';
-      var payload = json.decode(s);
-      _dispatchMessage(payload);
-      break;
-    case 'c':
-      var s = data.substring(1);
-      if (s == null) s = '[]';
-      var payload = json.decode(s);
-      _didClose(payload[0], payload[1]);
-      break;
-    case 'h':
-      _dispatchHeartbeat();
-      break;
+        }
+        break;
+      case 'm':
+        var s = data.substring(1);
+        if (s == null) s = 'null';
+        var payload = json.decode(s);
+        _dispatchMessage(payload);
+        break;
+      case 'c':
+        var s = data.substring(1);
+        if (s == null) s = '[]';
+        var payload = json.decode(s);
+        _didClose(payload[0], payload[1]);
+        break;
+      case 'h':
+        _dispatchHeartbeat();
+        break;
     }
   }
 
   bool _tryNextProtocol([CloseEvent closeEvent]) {
     if (protocol != null) {
-        _debug('Closed transport: $protocol $closeEvent');
-        protocol = null;
+      _debug('Closed transport: $protocol $closeEvent');
+      protocol = null;
     }
     if (_transportTref != null) {
-        _transportTref.cancel();
-        _transportTref = null;
+      _transportTref.cancel();
+      _transportTref = null;
     }
 
-    while(true) {
-
+    while (true) {
       if (_protocols.isEmpty) {
         return false;
       }
@@ -218,42 +216,44 @@ class Client extends Object with event.Emitter {
       // the `head`?
       if (PROTOCOLS.containsKey(protocol) &&
           PROTOCOLS[protocol].needBody &&
-          ( (html.document.body == null) || (html.document.readyState != null && html.document.readyState != 'complete'))
-          ) {
-          _protocols.insert(0, protocol);
-          this.protocol = 'waiting-for-load';
-          html.document.onLoad.listen( (_) => _tryNextProtocol());
-          return true;
+          ((html.document.body == null) ||
+              (html.document.readyState != null &&
+                  html.document.readyState != 'complete'))) {
+        _protocols.insert(0, protocol);
+        this.protocol = 'waiting-for-load';
+        html.document.onLoad.listen((_) => _tryNextProtocol());
+        return true;
       }
 
-      if (!PROTOCOLS.containsKey(protocol) ||
-            !PROTOCOLS[protocol].enabled) {
-          _debug('Skipping transport: $protocol');
+      if (!PROTOCOLS.containsKey(protocol) || !PROTOCOLS[protocol].enabled) {
+        _debug('Skipping transport: $protocol');
       } else {
-          // if roundTrips is passed in, we will use it
-          // instead of the defaulted value for the protocol.
-          var roundTrips = (this.roundTrips != null && this.roundTrips > 0)
-                           ? this.roundTrips
-                           : PROTOCOLS[protocol].roundTrips;
-          var to = this.timeout;
-          if (to == null || to < 1) {
-            to = rto * roundTrips;
-            if (to == 0) to = 5000;
+        // if roundTrips is passed in, we will use it
+        // instead of the defaulted value for the protocol.
+        var roundTrips = (this.roundTrips != null && this.roundTrips > 0)
+            ? this.roundTrips
+            : PROTOCOLS[protocol].roundTrips;
+        var to = this.timeout;
+        if (to == null || to < 1) {
+          to = rto * roundTrips;
+          if (to == 0) to = 5000;
+        }
+        _transportTref = new Timer(new Duration(milliseconds: to), () {
+          if (readyState == CONNECTING) {
+            // I can't understand how it is possible to run
+            // this timer, when the state is CLOSED, but
+            // apparently in IE everythin is possible.
+            _didClose(2007, "Transport timeouted");
           }
-          _transportTref = new Timer(new Duration(milliseconds:to), () {
-              if (readyState == CONNECTING) {
-                  // I can't understand how it is possible to run
-                  // this timer, when the state is CLOSED, but
-                  // apparently in IE everythin is possible.
-                  _didClose(2007, "Transport timeouted");
-              }
-          });
+        });
 
-          var connid = utils.random_string(8);
-          var trans_url = "$_baseUrl/$server/$connid";
-          _debug('Opening transport: $protocol url:$trans_url RTO:$rto roundTrips:$roundTrips timeout:$to');
-          _transport = PROTOCOLS[protocol].create(this, trans_url, baseUrl: _baseUrl, noCredentials: noCredentials);
-          return true;
+        var connid = utils.random_string(8);
+        var trans_url = "$_baseUrl/$server/$connid";
+        _debug(
+            'Opening transport: $protocol url:$trans_url RTO:$rto roundTrips:$roundTrips timeout:$to');
+        _transport = PROTOCOLS[protocol].create(this, trans_url,
+            baseUrl: _baseUrl, noCredentials: noCredentials);
+        return true;
       }
     }
   }
@@ -267,8 +267,7 @@ class Client extends Object with event.Emitter {
 
   _debug(String msg) {
     if (debug) {
-       print(msg);
+      print(msg);
     }
   }
-
 }

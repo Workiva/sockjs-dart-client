@@ -4,7 +4,6 @@ import "dart:async";
 import "dart:html" as html;
 import "dart:js";
 
-
 import "src/events.dart" as event;
 import "src/utils.dart" as utils;
 import 'dart:convert';
@@ -19,24 +18,35 @@ part "src/transport/receiver-xhr.dart";
 part "src/transport/websocket.dart";
 part "src/transport/xhr.dart";
 
-const version  = "<!-- version -->";
+const version = "<!-- version -->";
 
 const CONNECTING = 0;
 const OPEN = 1;
 const CLOSING = 2;
 const CLOSED = 3;
 
-typedef TransformFactory(Client client, String transUrl, {String baseUrl, bool noCredentials});
+typedef TransformFactory(Client client, String transUrl,
+    {String baseUrl, bool noCredentials});
 
 class Protocol {
   TransformFactory create;
   bool enabled;
   num roundTrips;
   bool needBody;
-  Protocol({this.create, this.enabled: true, this.roundTrips: 1, this.needBody: false});
+  Protocol(
+      {this.create,
+      this.enabled: true,
+      this.roundTrips: 1,
+      this.needBody: false});
 }
 
 Map<String, Protocol> PROTOCOLS = {
-  "websocket": new Protocol(create:WebSocketTransport.create, enabled: WebSocketTransport.enabled, roundTrips: WebSocketTransport.roundTrips),
-  "xhr-streaming": new Protocol(create:XhrStreamingTransport.create, enabled: XhrStreamingTransport.enabled, roundTrips: XhrStreamingTransport.roundTrips)
+  "websocket": new Protocol(
+      create: WebSocketTransport.create,
+      enabled: WebSocketTransport.enabled,
+      roundTrips: WebSocketTransport.roundTrips),
+  "xhr-streaming": new Protocol(
+      create: XhrStreamingTransport.create,
+      enabled: XhrStreamingTransport.enabled,
+      roundTrips: XhrStreamingTransport.roundTrips)
 };
