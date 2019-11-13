@@ -35,9 +35,9 @@ class Protocol {
   bool needBody;
   Protocol(
       {this.create,
-      this.enabled: true,
-      this.roundTrips: 1,
-      this.needBody: false});
+      this.enabled = true,
+      this.roundTrips = 1,
+      this.needBody = false});
 }
 
 Map<String, Protocol> PROTOCOLS = {

@@ -41,12 +41,12 @@ class Client extends Object with event.Emitter {
   Timer _transportTref;
 
   Client(String url,
-      {this.devel: false,
-      this.debug: false,
+      {this.devel = false,
+      this.debug = false,
       this.protocolsWhitelist,
       this.info,
-      this.noCredentials: false,
-      this.rtt: 0,
+      this.noCredentials = false,
+      this.rtt = 0,
       this.server,
       this.roundTrips,
       this.timeout}) {

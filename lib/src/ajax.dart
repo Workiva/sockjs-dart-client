@@ -18,7 +18,7 @@ class AbstractXHRObject extends Object with event.Emitter {
   Stream<StatusEvent> get onTimeout => getEventStream<StatusEvent>('timeout');
 
   void _start(String method, String url, dynamic payload,
-      {bool noCredentials: false, Map<String, String> headers}) {
+      {bool noCredentials = false, Map<String, String> headers}) {
     try {
       xhr = new html.HttpRequest();
     } catch (x) {}
