@@ -81,7 +81,7 @@ bool isSameOriginUrl(String url_a, [String url_b]) {
 
 String quote(String string) => json.encode(string);
 
-const _all_protocols = const [
+const _all_protocols = [
   'websocket',
   'xdr-streaming',
   'xhr-streaming',
