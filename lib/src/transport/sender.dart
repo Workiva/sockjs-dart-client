@@ -21,14 +21,14 @@ class BufferedSender {
     }
   }
 
-  /** For polling transports in a situation when in the message callback,
-    // new message is being send. If the sending connection was started
-    // before receiving one, it is possible to saturate the network and
-    // timeout due to the lack of receiving socket. To avoid that we delay
-    // sending messages by some small time, in order to let receiving
-    // connection be started beforehand. This is only a halfmeasure and
-    // does not fix the big problem, but it does make the tests go more
-    // stable on slow networks. */
+  /// For polling transports in a situation when in the message callback,
+  /// // new message is being send. If the sending connection was started
+  /// // before receiving one, it is possible to saturate the network and
+  /// // timeout due to the lack of receiving socket. To avoid that we delay
+  /// // sending messages by some small time, in order to let receiving
+  /// // connection be started beforehand. This is only a halfmeasure and
+  /// // does not fix the big problem, but it does make the tests go more
+  ///    // stable on slow networks.
   sendScheduleWait() {
     var tref;
     sendStop = () {
@@ -60,8 +60,8 @@ class BufferedSender {
   }
 }
 
-/** TODO To be fixed since Dart 1.0 does not give access anymore to IFrame ReadyState and only authorize
-// postMessage communication */
+/// TODO To be fixed since Dart 1.0 does not give access anymore to IFrame ReadyState and only authorize
+/// // postMessage communication
 class JsonPGenericSender {
   html.FormElement _sendForm = null;
   html.TextAreaElement _sendArea = null;
