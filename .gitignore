@@ -1,8 +1,6 @@
 .project
 
+.dart_tool
 /.packages
-/.pub
-packages
 /pubspec.lock
 node_modules
-/coverage
