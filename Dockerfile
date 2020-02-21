@@ -1,4 +1,8 @@
-FROM drydock-prod.workiva.net/workiva/smithy-runner-generator:350667 as build
+FROM google/dart:1.24.3 as build
+
+RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - \
+  && apt-get install -y nodejs \
+  && curl -L https://www.npmjs.com/install.sh | sh
 
 ARG NPM_TOKEN
 ARG NPM_CONFIG__AUTH
