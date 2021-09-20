@@ -34,7 +34,7 @@ RUN echo "installing npm packages"
 RUN npm install
 RUN echo "Starting the script section" && \
     pub get && \
-    dart analyze lib example && \
+    dart analyze . && \
     tar czvf sockjs_client.pub.tgz LICENSE README.md pubspec.yaml analysis_options.yaml lib/ && \
     echo "script section completed"
 ARG BUILD_ARTIFACTS_BUILD=/build/pubspec.lock
