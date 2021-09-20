@@ -1,4 +1,4 @@
-FROM google/dart:1.24.3 as build
+FROM drydock-prod.workiva.net/workiva/dart2_base_image:0.0.0-dart2.13.4 as build
 
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - \
   && apt-get install -y nodejs \
@@ -34,7 +34,7 @@ RUN echo "installing npm packages"
 RUN npm install
 RUN echo "Starting the script section" && \
     pub get && \
-    dartanalyzer lib example && \
+    dart analyze lib example && \
     tar czvf sockjs_client.pub.tgz LICENSE README.md pubspec.yaml analysis_options.yaml lib/ && \
     echo "script section completed"
 ARG BUILD_ARTIFACTS_BUILD=/build/pubspec.lock
