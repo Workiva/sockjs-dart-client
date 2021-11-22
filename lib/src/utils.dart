@@ -1,9 +1,9 @@
 library utils;
 
+import 'dart:convert';
 import 'dart:math' as Math;
 import 'dart:html';
 
-import "package:dart2_constant/convert.dart" as convert;
 
 import "../sockjs_client.dart" as SockJS;
 
@@ -56,7 +56,7 @@ String amendUrl(String url) {
     return url;
 }
 
-closeFrame(code, reason) => 'c${convert.json.encode([code, reason])}';
+closeFrame(code, reason) => 'c${json.encode([code, reason])}';
 
 bool userSetCode(int code) => code == 1000 || (code >= 3000 && code <= 4999);
 
@@ -80,7 +80,7 @@ bool isSameOriginUrl(String url_a, [String url_b]) {
               == url_b.split('/').getRange(0,3).join('/'));
 }
 
-String quote(String string) => convert.json.encode(string);
+String quote(String string) => json.encode(string);
 
 const _all_protocols = const [
                        'websocket',

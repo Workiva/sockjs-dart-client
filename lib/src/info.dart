@@ -67,7 +67,7 @@ class AjaxInfoReceiver extends InfoReceiver {
         tref = null;
         if (evt.status == 200) {
             var rtt = new DateTime.now().millisecondsSinceEpoch - t0;
-            var info = new Info.fromJSON(convert.json.decode(evt.text));
+            var info = new Info.fromJSON(json.decode(evt.text));
             dispatch(new InfoReceiverEvent("finish", info, rtt));
         } else {
             dispatch(new InfoReceiverEvent("finish"));
@@ -135,7 +135,7 @@ class WInfoReceiverIframe {
     var ir = new AjaxInfoReceiver(baseUrl, XHRLocalObjectFactory);
     ir.onFinish.listen( (event.Event evt) {
       if (evt is InfoReceiverEvent) {
-        ri._didMessage('m${convert.json.encode([evt.info, evt.rtt])}');
+        ri._didMessage('m${json.encode([evt.info, evt.rtt])}');
       }
       ri._didClose();
     });
