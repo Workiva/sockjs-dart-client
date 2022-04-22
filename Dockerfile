@@ -33,7 +33,7 @@ RUN mkdir /root/.ssh && \
 RUN echo "installing npm packages"
 RUN npm install
 RUN echo "Starting the script section" && \
-    pub get && \
+    dart pub get && \
     dart analyze . && \
     tar czvf sockjs_client.pub.tgz LICENSE README.md pubspec.yaml analysis_options.yaml lib/ && \
     echo "script section completed"

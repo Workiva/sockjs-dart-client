@@ -26,11 +26,11 @@ case $TASK in
     sleep 2
 
     if [[ $DART_VERSION = $DART_2_PREFIX* ]]; then
-      echo -e 'pub run build_runner test -- -P all -P travis'
-      pub run build_runner test -- -P all -P travis
+      echo -e 'dart run build_runner test -- -P all -P travis'
+      dart run build_runner test -- -P all -P travis
     else
-      echo -e 'pub run test -P all -P travis'
-      pub run test -P all -P travis
+      echo -e 'dart test -P all -P travis'
+      dart test -P all -P travis
     fi
 
     kill $SOCKJS_SERVER
