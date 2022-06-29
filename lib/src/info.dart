@@ -60,7 +60,7 @@ class AjaxInfoReceiver extends InfoReceiver {
     var t0 = new DateTime.now().millisecondsSinceEpoch;
     var xo = xhrFactory('GET', "$baseUrl/info");
 
-    var tref = new Timer(new Duration(milliseconds:8000), () => dispatch("timeout"));
+    var tref = Timer(const Duration(seconds:60), () => dispatch('timeout'));
 
     xo.onFinish.listen((StatusEvent evt) {
         tref.cancel();

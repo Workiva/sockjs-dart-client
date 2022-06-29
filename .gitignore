@@ -6,3 +6,5 @@ packages
 /pubspec.lock
 node_modules
 /coverage
+/.idea
+/.dart_tool
