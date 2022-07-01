@@ -1,22 +1,25 @@
 part of sockjs_client;
 
 class AjaxBasedTransport extends BufferedSender {
-
   Client ri;
 
   Polling poll = null;
 
-  AjaxBasedTransport(Client ri, transUrl, urlSuffix, ReceiverFactory receiverFactory, AjaxObjectFactory xhrFactory, {bool noCredentials}) {
+  AjaxBasedTransport(Client ri, transUrl, urlSuffix,
+      ReceiverFactory receiverFactory, AjaxObjectFactory xhrFactory,
+      {bool noCredentials}) {
     this.ri = ri;
     this.transUrl = transUrl;
     sendConstructor(createAjaxSender(xhrFactory, noCredentials: noCredentials));
-    this.poll = new Polling(ri, receiverFactory, "$transUrl$urlSuffix", xhrFactory, noCredentials: noCredentials);
+    this.poll = new Polling(
+        ri, receiverFactory, "$transUrl$urlSuffix", xhrFactory,
+        noCredentials: noCredentials);
   }
 
   doCleanup() {
     if (poll != null) {
-        poll.abort();
-        poll = null;
+      poll.abort();
+      poll = null;
     }
   }
 }
@@ -24,11 +27,13 @@ class AjaxBasedTransport extends BufferedSender {
 // xhr-streaming
 
 class XhrStreamingTransport extends AjaxBasedTransport {
+  XhrStreamingTransport(ri, transUrl, {bool noCredentials})
+      : super(ri, transUrl, '/xhr_streaming', XhrReceiverFactory,
+            XHRCorsObjectFactory,
+            noCredentials: noCredentials);
 
-  XhrStreamingTransport(ri, transUrl, {bool noCredentials}) :
-    super(ri, transUrl, '/xhr_streaming', XhrReceiverFactory, XHRCorsObjectFactory, noCredentials: noCredentials);
-
-  static create(ri, transUrl, {baseUrl, bool noCredentials}) => new XhrStreamingTransport(ri, transUrl, noCredentials: noCredentials);
+  static create(ri, transUrl, {baseUrl, bool noCredentials}) =>
+      new XhrStreamingTransport(ri, transUrl, noCredentials: noCredentials);
 
   static bool get enabled {
     return true;
@@ -44,14 +49,11 @@ class XhrStreamingTransport extends AjaxBasedTransport {
   // Safari gets confused when a streaming ajax request is started
   // before onload. This causes the load indicator to spin indefinetely.
   static const needBody = true;
-
-
 }
 
 // According to:
 //   http://stackoverflow.com/questions/1641507/detect-browser-support-for-cross-domain-xmlhttprequests
 //   http://hacks.mozilla.org/2009/07/cross-site-xmlhttprequest-with-cors/
-
 
 /* xdr-streaming
 var XdrStreamingTransport = SockJS['xdr-streaming'] = function(ri, trans_url) {

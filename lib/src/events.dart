@@ -8,13 +8,15 @@ class Event {
 }
 
 class Emitter {
-
   final _evtController = new StreamController<Event>.broadcast();
 
-  Stream<Event> operator[] (type) => _evtController.stream.where((e) => e.type == type);
-  
+  Stream<Event> operator [](type) =>
+      _evtController.stream.where((e) => e.type == type);
+
   Stream<T> getEventStream<T extends Event>(String type) {
-    return _evtController.stream.where((e) => e.type == type).map((e) => e as T);
+    return _evtController.stream
+        .where((e) => e.type == type)
+        .map((e) => e as T);
   }
 
   dispatch(evtOrType) {

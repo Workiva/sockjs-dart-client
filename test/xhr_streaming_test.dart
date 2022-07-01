@@ -6,11 +6,11 @@ import 'dart:async';
 import 'package:sockjs_client/sockjs_client.dart';
 import 'package:test/test.dart';
 
-
 void main() {
   group('Xhr Receiver', () {
     test('broadcasts message on chunk', () async {
-      XhrReceiver xhrReceiver = XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
+      XhrReceiver xhrReceiver =
+          XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
 
       Completer msgCompleter = new Completer();
       xhrReceiver.onMessage.listen((e) {
@@ -24,7 +24,8 @@ void main() {
     });
 
     test('broadcasts message and close on finish', () async {
-      XhrReceiver xhrReceiver = XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
+      XhrReceiver xhrReceiver =
+          XhrReceiverFactory('foo', MockXHRCorsObjectFactory);
 
       Completer msgCompleter = new Completer();
       Completer closeCompleter = new Completer();
@@ -45,8 +46,8 @@ void main() {
   });
 }
 
-
-AbstractXHRObject MockXHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, payload}) {
+AbstractXHRObject MockXHRCorsObjectFactory(String method, String baseUrl,
+    {bool noCredentials, payload}) {
   return new MockXHRCorsObject();
 }
 
