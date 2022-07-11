@@ -21,24 +21,31 @@ void main() {
     });
 
     group('web-socket', () {
-      Client createEchoClient() => new Client(echoUri, noCredentials: true, protocolsWhitelist: ['websocket']);
-      Client createCorClient() => new Client(corUri, noCredentials: true, protocolsWhitelist: ['websocket']);
-      Client create404Client() => new Client(fofUri, noCredentials: true, protocolsWhitelist: ['websocket']);
+      Client createEchoClient() => new Client(echoUri,
+          noCredentials: true, protocolsWhitelist: ['websocket']);
+      Client createCorClient() => new Client(corUri,
+          noCredentials: true, protocolsWhitelist: ['websocket']);
+      Client create404Client() => new Client(fofUri,
+          noCredentials: true, protocolsWhitelist: ['websocket']);
 
       integrationSuite(createEchoClient, createCorClient, create404Client);
     });
 
     group('xhr-streaming', () {
-      Client createEchoClient() => new Client(echoUri, noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
-      Client createCorClient() => new Client(corUri, noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
-      Client create404Client() => new Client(fofUri, noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
+      Client createEchoClient() => new Client(echoUri,
+          noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
+      Client createCorClient() => new Client(corUri,
+          noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
+      Client create404Client() => new Client(fofUri,
+          noCredentials: true, protocolsWhitelist: ['xhr-streaming']);
 
       integrationSuite(createEchoClient, createCorClient, create404Client);
     });
   });
 }
 
-void integrationSuite(Client createEchoClient(), Client createCorClient(), Client create404Client()) {
+void integrationSuite(Client createEchoClient(), Client createCorClient(),
+    Client create404Client()) {
   test('connecting to a SockJS server', () async {
     Client client = createEchoClient();
     await client.onOpen.first;
@@ -70,7 +77,10 @@ void integrationSuite(Client createEchoClient(), Client createCorClient(), Clien
     await client.onOpen.first;
     client.close();
     final closeEvent = await client.onClose.first;
-    expect(closeEvent.code == 1000 /* websocket */ || closeEvent.code == 0 /* xhr */, isTrue);
+    expect(
+        closeEvent.code == 1000 /* websocket */ ||
+            closeEvent.code == 0 /* xhr */,
+        isTrue);
   });
 
   test('client closing the connection with code and reason', () async {

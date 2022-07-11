@@ -6,10 +6,10 @@ class StatusEvent extends event.Event {
   StatusEvent(String type, [this.status = 0, this.text = ""]) : super(type);
 }
 
-typedef AbstractXHRObject AjaxObjectFactory(String method, String baseUrl, {bool noCredentials, dynamic payload});
+typedef AbstractXHRObject AjaxObjectFactory(String method, String baseUrl,
+    {bool noCredentials, dynamic payload});
 
 class AbstractXHRObject extends Object with event.Emitter {
-
   html.HttpRequest xhr;
   StreamSubscription changeSubscription;
 
@@ -17,20 +17,22 @@ class AbstractXHRObject extends Object with event.Emitter {
   Stream<StatusEvent> get onFinish => getEventStream<StatusEvent>('finish');
   Stream<StatusEvent> get onTimeout => getEventStream<StatusEvent>('timeout');
 
-  void _start(String method, String url, dynamic payload, {bool noCredentials: false, Map<String, String> headers}) {
-
+  void _start(String method, String url, dynamic payload,
+      {bool noCredentials: false, Map<String, String> headers}) {
     try {
-        xhr = new html.HttpRequest();
-    } catch(x) {};
+      xhr = new html.HttpRequest();
+    } catch (x) {}
+    ;
 
-    if ( xhr == null ) {
-        try {
-            // TODO(nelsonsilva) - xhr = new window['ActiveXObject']('Microsoft.XMLHTTP');
-        } catch(x) {};
+    if (xhr == null) {
+      try {
+        // TODO(nelsonsilva) - xhr = new window['ActiveXObject']('Microsoft.XMLHTTP');
+      } catch (x) {}
+      ;
     }
     // TODO(nelsonsilva)
     //if ( window['ActiveXObject'] != null || window['XDomainRequest'] != null) {
-        // IE8 caches even POSTs
+    // IE8 caches even POSTs
     //    url += ((url.indexOf('?') === -1) ? '?' : '&') + 't='+(+new Date);
     //}
 
@@ -39,21 +41,22 @@ class AbstractXHRObject extends Object with event.Emitter {
     //that.unload_ref = utils.unload_add(function(){that._cleanup(true);});
 
     try {
-        xhr.open(method, url);
-    } catch(e) {
-        // IE raises an exception on wrong port.
-        dispatch(new StatusEvent("finish"));
-        _cleanup();
-        return;
-    };
+      xhr.open(method, url);
+    } catch (e) {
+      // IE raises an exception on wrong port.
+      dispatch(new StatusEvent("finish"));
+      _cleanup();
+      return;
+    }
+    ;
 
     if (!noCredentials) {
-        // Mozilla docs says https://developer.mozilla.org/en/XMLHttpRequest :
-        // "This never affects same-site requests."
-        xhr.withCredentials = true;
+      // Mozilla docs says https://developer.mozilla.org/en/XMLHttpRequest :
+      // "This never affects same-site requests."
+      xhr.withCredentials = true;
     }
     if (headers != null) {
-        headers.forEach((k, v) => xhr.setRequestHeader(k, v));
+      headers.forEach((k, v) => xhr.setRequestHeader(k, v));
     }
 
     changeSubscription = xhr.onReadyStateChange.listen(_readyStateHandler);
@@ -71,7 +74,8 @@ class AbstractXHRObject extends Object with event.Emitter {
         try {
           status = xhr.status;
           text = xhr.responseText;
-        } catch (x) {};
+        } catch (x) {}
+        ;
         // IE does return readystate == 3 for 404 answers.
         if (text != null && !text.isEmpty) {
           dispatch(new StatusEvent("chunk", status, text));
@@ -85,7 +89,6 @@ class AbstractXHRObject extends Object with event.Emitter {
   }
 
   void _cleanup([bool abort = false]) {
-
     if (xhr == null) return;
     // utils.unload_del(that.unload_ref);
 
@@ -93,12 +96,13 @@ class AbstractXHRObject extends Object with event.Emitter {
     changeSubscription.cancel();
 
     if (abort) {
-        try {
-            xhr.abort();
-        } catch(x) {};
+      try {
+        xhr.abort();
+      } catch (x) {}
+      ;
     }
     //that.unload_ref = that.xhr = null;
-}
+  }
 
   void close() {
     // TODO(nelsonsilva) - nuke();
@@ -107,25 +111,31 @@ class AbstractXHRObject extends Object with event.Emitter {
 }
 
 class XHRCorsObject extends AbstractXHRObject {
-   XHRCorsObject(String method, String url, {Map<String, String> headers, bool noCredentials, dynamic payload})  {
-    Timer.run(() =>_start(method, url, payload, noCredentials: noCredentials != null ? noCredentials : false));
-   }
+  XHRCorsObject(String method, String url,
+      {Map<String, String> headers, bool noCredentials, dynamic payload}) {
+    Timer.run(() => _start(method, url, payload,
+        noCredentials: noCredentials != null ? noCredentials : false));
+  }
 }
-
-
 
 class XHRLocalObject extends AbstractXHRObject {
-  XHRLocalObject(String method, String url, {Map<String, String> headers, bool noCredentials, dynamic payload}) {
-    Timer.run(() =>_start(method, url, payload, noCredentials: noCredentials != null ? noCredentials : true));
-    }
+  XHRLocalObject(String method, String url,
+      {Map<String, String> headers, bool noCredentials, dynamic payload}) {
+    Timer.run(() => _start(method, url, payload,
+        noCredentials: noCredentials != null ? noCredentials : true));
+  }
 }
 
-AbstractXHRObject XHRLocalObjectFactory(String method, String baseUrl, {bool noCredentials, dynamic payload}) {
-  return new XHRLocalObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
+AbstractXHRObject XHRLocalObjectFactory(String method, String baseUrl,
+    {bool noCredentials, dynamic payload}) {
+  return new XHRLocalObject(method, baseUrl,
+      noCredentials: noCredentials, payload: payload);
 }
 
-AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl, {bool noCredentials, dynamic payload}) {
-  return new XHRCorsObject(method, baseUrl, noCredentials: noCredentials, payload: payload);
+AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl,
+    {bool noCredentials, dynamic payload}) {
+  return new XHRCorsObject(method, baseUrl,
+      noCredentials: noCredentials, payload: payload);
 }
 
 // 1. Is natively via XHR
@@ -133,9 +143,9 @@ AbstractXHRObject XHRCorsObjectFactory(String method, String baseUrl, {bool noCr
 // 3. Nope, but postMessage is there so it should work via the Iframe.
 // 4. Nope, sorry.
 int isXHRCorsCapable() {
-    return 1;
+  return 1;
 
-    /*
+  /*
     if (window["XMLHttpRequest"] != null && window["'withCredentials' in new XMLHttpRequest()) {
         return 1;
     }
