@@ -1,4 +1,4 @@
-FROM drydock-prod.workiva.net/workiva/dart2_base_image:1
+FROM drydock-prod.workiva.net/workiva/dart2_base_image:0.0.0-dart2.18.7gha3
 
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - \
   && apt-get install -y nodejs \
