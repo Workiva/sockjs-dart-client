@@ -22,6 +22,8 @@ ARG GIT_MERGE_HEAD
 ARG GIT_MERGE_BRANCH
 ARG GIT_SSH_KEY
 ARG KNOWN_HOSTS_CONTENT
+ARG npm_config_ignore_scripts=true
+ENV npm_config_ignore_scripts=${npm_config_ignore_scripts}
 WORKDIR /build/
 ADD . /build/
 
